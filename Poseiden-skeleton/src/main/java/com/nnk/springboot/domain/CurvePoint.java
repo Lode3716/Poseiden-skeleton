@@ -1,25 +1,23 @@
 package com.nnk.springboot.domain;
 
-import lombok.Builder;
 import lombok.Getter;
-import org.hibernate.validator.constraints.Length;
+import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.io.Serializable;
 import java.sql.Timestamp;
 
-@Builder
 @Getter
 @Entity
 @Table(name = "curvepoint")
-public class CurvePoint {
+public class CurvePoint implements Serializable {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
+    @Setter
     @Pattern(regexp = "^([0-9]\\d*|0)$")
     private Integer curveId;
 

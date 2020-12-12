@@ -7,6 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 @FieldDefaults(level= AccessLevel.PRIVATE)
@@ -16,12 +17,13 @@ import java.sql.Timestamp;
 @EqualsAndHashCode(of = {"tradeId"})
 @Entity
 @Table(name = "trade")
-public class Trade {
+public class Trade implements Serializable {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     Integer tradeId;
 
+    @Setter
     @NotNull(message = "Account is mandatory")
     String account;
 

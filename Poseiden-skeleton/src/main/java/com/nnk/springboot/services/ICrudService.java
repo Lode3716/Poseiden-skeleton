@@ -9,11 +9,9 @@ public interface ICrudService<T> {
 
     public List<T> readAll();
 
-    public Optional<T> update(T objet);
+    public T update(T objet);
 
-    public  boolean delete(T objet);
-
-    public boolean exist(T objet);
+    public  void delete(T objet);
 
 
 }

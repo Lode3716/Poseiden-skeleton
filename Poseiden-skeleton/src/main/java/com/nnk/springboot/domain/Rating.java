@@ -7,6 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 @FieldDefaults(level=AccessLevel.PRIVATE)
@@ -16,7 +17,7 @@ import java.sql.Timestamp;
 @EqualsAndHashCode(of = {"id"})
 @Entity
 @Table(name = "rating")
-public class Rating {
+public class Rating implements Serializable {
 
     @Id
     @NotNull
@@ -29,6 +30,14 @@ public class Rating {
 
     String fitchRating;
 
+    @Setter
     Integer orderNumber;
 
+
+    public Rating(String moodysRating, String sandPRating, String fitchRating, Integer orderNumber) {
+        this.moodysRating = moodysRating;
+        this.sandPRating = sandPRating;
+        this.fitchRating = fitchRating;
+        this.orderNumber = orderNumber;
+    }
 }

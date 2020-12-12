@@ -1,18 +1,18 @@
 package com.nnk.springboot.domain;
 
-import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 @Getter
-@Builder
 @Entity
 @Table(name = "bidlist")
-public class BidList {
+public class BidList implements Serializable {
 
     @Id
     @Column(name = "bidListId")
@@ -25,9 +25,11 @@ public class BidList {
     @NotNull(message = "Type is mandatory")
     private String type;
 
+    @Setter
     @Pattern(regexp = "^0$|^[1-9]\\d*$|^\\.\\d+$|^0\\.\\d*$|^[1-9]\\d*\\.\\d*$")
     private Double bidQuantity;
 
+    @Setter
     @Pattern(regexp = "^0$|^[1-9]\\d*$|^\\.\\d+$|^0\\.\\d*$|^[1-9]\\d*\\.\\d*$")
     private Double askQuantity;
 

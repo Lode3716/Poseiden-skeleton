@@ -2,13 +2,13 @@ package com.nnk.springboot.services;
 
 import com.nnk.springboot.domain.User;
 import com.nnk.springboot.repositories.UserRepository;
+import com.nnk.springboot.services.exceptions.UserExistException;
+import com.nnk.springboot.services.exceptions.UserNotFoundException;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityExistsException;
 import java.util.List;
-import java.util.Optional;
 import java.util.logging.Level;
 
 @Log
@@ -20,12 +20,11 @@ public class UserService implements IUserService {
 
     @Override
     public User save(User user) {
-        if(existsByUsername(user.getUsername()))
-        {
-            log.log(Level.WARNING,"This user name is already exiting");
-            throw new EntityExistsException("This user name is already exiting");
-        }else{
-         return userRepository.save(user);
+        if (existsByUsername(user.getUsername())) {
+            log.log(Level.WARNING, "This user name is already exiting");
+            throw new UserExistException("This user name is already exiting");
+        } else {
+            return userRepository.save(user);
         }
     }
 
@@ -35,18 +34,25 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public Optional<User> update(User user) {
-        return Optional.empty();
+    public User update(User user) {
+        User updateUser = existById(user.getId());
+        updateUser.setPassword(user.getPassword());
+        updateUser.setPassword(user.getUsername());
+        updateUser.setFullname(user.getFullname());
+        updateUser.setRole(user.getRole());
+        return save(updateUser);
     }
 
     @Override
-    public boolean delete(User user) {
-        return false;
+    public void delete(User user) {
+         userRepository.deleteById(existById(user.getId()).getId());
     }
 
-    @Override
-    public boolean exist(User user) {
-        return userRepository.existsById(user.getId());
+
+    public User existById(Integer id) {
+        return userRepository
+                .findById(id)
+                .orElseThrow(() -> new UserNotFoundException("There is no user with this id"));
     }
 
     public boolean existsByUsername(String userName) {
