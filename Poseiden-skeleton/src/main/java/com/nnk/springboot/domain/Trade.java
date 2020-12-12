@@ -6,6 +6,7 @@ import lombok.experimental.FieldDefaults;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.sql.Timestamp;
 
 @FieldDefaults(level= AccessLevel.PRIVATE)
@@ -16,7 +17,6 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "trade")
 public class Trade {
-    // TODO: Map columns in data table TRADE with corresponding java fields
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -28,12 +28,16 @@ public class Trade {
     @NotNull(message = "Type is mandatory")
     String type;
 
+    @Pattern(regexp = "^0$|^[1-9]\\d*$|^\\.\\d+$|^0\\.\\d*$|^[1-9]\\d*\\.\\d*$")
     Double buyQuantity;
 
+    @Pattern(regexp = "^0$|^[1-9]\\d*$|^\\.\\d+$|^0\\.\\d*$|^[1-9]\\d*\\.\\d*$")
     Double sellQuantity;
 
+    @Pattern(regexp = "^0$|^[1-9]\\d*$|^\\.\\d+$|^0\\.\\d*$|^[1-9]\\d*\\.\\d*$")
     Double buyPrice;
 
+    @Pattern(regexp = "^0$|^[1-9]\\d*$|^\\.\\d+$|^0\\.\\d*$|^[1-9]\\d*\\.\\d*$")
     Double sellPrice;
 
     String benchmark;
