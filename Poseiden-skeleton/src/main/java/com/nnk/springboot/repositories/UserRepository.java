@@ -9,4 +9,6 @@ import org.springframework.data.repository.query.Param;
 
 public interface UserRepository extends JpaRepository<User, Integer>, JpaSpecificationExecutor<User> {
 
+    @Query("select case when count(c)> 0 then true else false end from User u where lower(u.userName) like lower(:userName)")
+    boolean existsByUsername(@Param("userName")String userName);
 }
