@@ -19,10 +19,10 @@ public class User implements Serializable {
     @Id
     @Setter
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    Integer id;
 
     @NotBlank(message = "Username is mandatory")
-    private String username;
+    String username;
 
     @Setter
     @Pattern(regexp = "^(?=.*[A-Z])(?=.*[!@#$&_*])(?=.*[0-9]).{8,15}$")
