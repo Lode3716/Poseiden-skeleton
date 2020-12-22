@@ -46,7 +46,7 @@ public class BidListService implements IBidListService {
 
     @Override
     public BidListDto update(BidListDto bidListDto) {
-        BidList updateBidList = existById(bidListUnJMapper.getDestination(bidListDto).getBidListId());
+        BidList updateBidList = existById(bidListDto.getBidListId());
         updateBidList.setAccount(bidListDto.getAccount());
         updateBidList.setType(bidListDto.getType());
         updateBidList.setBidQuantity(bidListDto.getBidQuantity());
@@ -61,6 +61,6 @@ public class BidListService implements IBidListService {
 
     public BidList existById(Integer id) {
         return bidListRepository.findById(id)
-                .orElseThrow(() -> new BidListNotFoundException("There is no user with this id"));
+                .orElseThrow(() -> new BidListNotFoundException("There is no bidList with this id "+id));
     }
 }

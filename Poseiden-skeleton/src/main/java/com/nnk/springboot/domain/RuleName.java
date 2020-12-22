@@ -10,6 +10,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 @EqualsAndHashCode(of = {"id"})
 @Entity
 @Table(name = "rulename")
@@ -18,18 +19,11 @@ public class RuleName implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Integer id;
-
-    @Setter
     String name;
-
     String description;
-
     String json;
-
     String template;
-
     String sqlStr;
-
     String sqlPart;
 
     public RuleName(String name, String description, String json, String template, String sqlStr, String sqlPart) {

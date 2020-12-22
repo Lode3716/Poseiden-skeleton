@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 
 @Log
@@ -35,17 +37,19 @@ public class UserService implements IUserService {
 
     @Override
     public User update(User user) {
-        User updateUser = existById(user.getId());
-        updateUser.setPassword(user.getPassword());
-        updateUser.setPassword(user.getUsername());
-        updateUser.setFullname(user.getFullname());
-        updateUser.setRole(user.getRole());
-        return save(updateUser);
+
+            User updateUser = existById(user.getId());
+            updateUser.setPassword(user.getPassword());
+            updateUser.setPassword(user.getUsername());
+            updateUser.setFullname(user.getFullname());
+            updateUser.setRole(user.getRole());
+            return save(updateUser);
     }
+
 
     @Override
     public void delete(User user) {
-         userRepository.deleteById(existById(user.getId()).getId());
+        userRepository.deleteById(existById(user.getId()).getId());
     }
 
 
