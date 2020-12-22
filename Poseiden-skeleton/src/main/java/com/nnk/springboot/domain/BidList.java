@@ -16,12 +16,15 @@ public class BidList implements Serializable {
 
     @Id
     @Column(name = "bidListId")
+    @Setter
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer bidListId;
 
+    @Setter
     @NotNull(message = "Account is mandatory")
     private String account;
 
+    @Setter
     @NotNull(message = "Type is mandatory")
     private String type;
 

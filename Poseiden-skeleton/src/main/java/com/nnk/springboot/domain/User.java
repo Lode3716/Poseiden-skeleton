@@ -25,7 +25,7 @@ public class User implements Serializable {
     String username;
 
     @Setter
-    @Pattern(regexp = "^(?=.*[A-Z])(?=.*[!@#$&_*])(?=.*[0-9]).{8,15}$")
+    //@Pattern(regexp = "^(?=.*[A-Z])(?=.*[!@#$&_*])(?=.*[0-9]).{8,15}$")
     @NotBlank(message = "Password is mandatory")
     String password;
 
