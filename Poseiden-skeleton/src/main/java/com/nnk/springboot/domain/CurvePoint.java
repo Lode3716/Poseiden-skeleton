@@ -14,6 +14,7 @@ import java.sql.Timestamp;
 public class CurvePoint implements Serializable {
 
     @Id
+    @Setter
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
@@ -23,9 +24,11 @@ public class CurvePoint implements Serializable {
 
     private Timestamp asOfDate;
 
+    @Setter
     @Pattern(regexp = "^0$|^[1-9]\\d*$|^\\.\\d+$|^0\\.\\d*$|^[1-9]\\d*\\.\\d*$")
     private Double term;
 
+    @Setter
     @Pattern(regexp = "^0$|^[1-9]\\d*$|^\\.\\d+$|^0\\.\\d*$|^[1-9]\\d*\\.\\d*$")
     private Double value;
 

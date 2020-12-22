@@ -8,10 +8,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @JGlobalMap
-public class BidListDto {
+public class CurvePointDto {
 
-    private Integer bidListId;
-    private String account;
-    private String type;
-    private Double bidQuantity;
+    private Integer id;
+    private Integer curveId;
+    private Double term;
+    private Double value;
 }
