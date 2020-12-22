@@ -14,6 +14,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 @EqualsAndHashCode(of = {"id"})
 @Entity
 @Table(name = "rating")
@@ -30,7 +31,6 @@ public class Rating implements Serializable {
 
     String fitchRating;
 
-    @Setter
     Integer orderNumber;
 
 

@@ -4,6 +4,7 @@ package com.nnk.springboot.dto;
 import com.googlecode.jmapper.JMapper;
 import com.nnk.springboot.domain.BidList;
 import com.nnk.springboot.domain.CurvePoint;
+import com.nnk.springboot.domain.Rating;
 import com.nnk.springboot.domain.RuleName;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,4 +42,16 @@ public class ConfigDTO {
     JMapper<RuleName, RuleNameDto> ruleNameUnJMapper() {
         return new JMapper<>(RuleName.class,RuleNameDto.class);
     }
+
+    @Bean
+    JMapper<RatingDto, Rating> ratingJMapper() {
+        return new JMapper<>(RatingDto.class,Rating.class);
+    }
+
+    @Bean
+    JMapper<Rating, RatingDto> ratingUnJMapper() {
+        return new JMapper<>(Rating.class,RatingDto.class);
+    }
+
+
 }
