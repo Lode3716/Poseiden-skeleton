@@ -1,7 +1,6 @@
 package com.nnk.springboot.services;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ICrudService<T> {
 
@@ -11,7 +10,7 @@ public interface ICrudService<T> {
 
     public T update(T objet);
 
-    public  void delete(T objet);
+    public void delete(T objet);
 
 
 }
