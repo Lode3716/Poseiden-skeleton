@@ -1,7 +1,9 @@
 package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.BidList;
+import com.nnk.springboot.dto.BidListDto;
 import com.nnk.springboot.services.IBidListService;
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,8 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
+import javax.xml.ws.soap.Addressing;
 
-
+@Log
 @Controller
 public class BidListController {
 
@@ -21,20 +24,26 @@ public class BidListController {
     private IBidListService bidListService;
 
     @RequestMapping("/bidList/list")
-    public String home(Model model)
-    {
-        model.addAttribute("bidList",bidListService.readAll());
+    public String home(Model model) {
+        model.addAttribute("bidList", bidListService.readAll());
         return "bidList/list";
     }
 
     @GetMapping("/bidList/add")
-    public String addBidForm(BidList bid) {
+    public String addBidForm(BidListDto bidListDto) {
+        log.info("GET Request on :  /bidList/add");
         return "bidList/add";
     }
 
     @PostMapping("/bidList/validate")
-    public String validate(@Valid BidList bid, BindingResult result, Model model) {
-        // TODO: check data valid and save to db, after saving return bid list
+    public String validate(@Valid BidListDto bidListDto, BindingResult result, Model model) {
+        log.info("POST Request on :  /bidList/validate");
+        if (!result.hasErrors()) {
+            log.info("Save ok" + bidListDto);
+            bidListService.save(bidListDto);
+            model.addAttribute("bidLists", bidListService.readAll());
+            return "redirect:/bidList/list";
+        }
         return "bidList/add";
     }
 
@@ -46,7 +55,7 @@ public class BidListController {
 
     @PostMapping("/bidList/update/{id}")
     public String updateBid(@PathVariable("id") Integer id, @Valid BidList bidList,
-                             BindingResult result, Model model) {
+                            BindingResult result, Model model) {
         // TODO: check required fields, if valid call service to update Bid and return list Bid
         return "redirect:/bidList/list";
     }

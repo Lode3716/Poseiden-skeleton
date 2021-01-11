@@ -27,8 +27,10 @@ public class BidListService implements IBidListService {
 
     @Override
     public BidListDto save(BidListDto bidListDto) {
-        BidList bidList = bidListRepository.save(bidListUnJMapper.getDestination(bidListDto));
-        log.debug("Service : BidList is save in Bdd : {} ", bidList);
+        BidList bid = bidListUnJMapper.getDestination(bidListDto);
+        log.info("Affiche objet : "+bid.toString());
+        BidList bidList = bidListRepository.save(bid);
+        log.info("Service : BidList is save in Bdd : {} ", bidList);
         return bidListJMapper.getDestination(bidList);
     }
 
@@ -61,6 +63,6 @@ public class BidListService implements IBidListService {
 
     public BidList existById(Integer id) {
         return bidListRepository.findById(id)
-                .orElseThrow(() -> new BidListNotFoundException("There is no bidList with this id "+id));
+                .orElseThrow(() -> new BidListNotFoundException("There is no bidList with this id " + id));
     }
 }

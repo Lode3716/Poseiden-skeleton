@@ -1,15 +1,19 @@
 package com.nnk.springboot.domain;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.PositiveOrZero;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
 @Getter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(of = "bidListId")
 @Entity
 @Table(name = "bidlist")
 public class BidList implements Serializable {
@@ -29,17 +33,18 @@ public class BidList implements Serializable {
     private String type;
 
     @Setter
-    @Pattern(regexp = "^0$|^[1-9]\\d*$|^\\.\\d+$|^0\\.\\d*$|^[1-9]\\d*\\.\\d*$")
+    @PositiveOrZero
+    @NotNull
+    //@Pattern(regexp = "^0$|^[1-9]\\d*$|^\\.\\d+$|^0\\.\\d*$|^[1-9]\\d*\\.\\d*$")
     private Double bidQuantity;
 
-    @Setter
-    @Pattern(regexp = "^0$|^[1-9]\\d*$|^\\.\\d+$|^0\\.\\d*$|^[1-9]\\d*\\.\\d*$")
+    //@Pattern(regexp = "^0$|^[1-9]\\d*$|^\\.\\d+$|^0\\.\\d*$|^[1-9]\\d*\\.\\d*$")
     private Double askQuantity;
 
-    @Pattern(regexp = "^0$|^[1-9]\\d*$|^\\.\\d+$|^0\\.\\d*$|^[1-9]\\d*\\.\\d*$")
+    //@Pattern(regexp = "^0$|^[1-9]\\d*$|^\\.\\d+$|^0\\.\\d*$|^[1-9]\\d*\\.\\d*$")
     private Double bid;
 
-    @Pattern(regexp = "^0$|^[1-9]\\d*$|^\\.\\d+$|^0\\.\\d*$|^[1-9]\\d*\\.\\d*$")
+    //@Pattern(regexp = "^0$|^[1-9]\\d*$|^\\.\\d+$|^0\\.\\d*$|^[1-9]\\d*\\.\\d*$")
     private Double ask;
 
     private String benchmark;
@@ -71,9 +76,6 @@ public class BidList implements Serializable {
     private String sourceListId;
 
     private String side;
-
-    public BidList() {
-    }
 
     public BidList(@NotNull(message = "Account is mandatory") String account, @NotNull(message = "Type is mandatory") String type, Double bidQuantity) {
         this.account = account;

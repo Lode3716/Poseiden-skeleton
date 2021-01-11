@@ -21,6 +21,7 @@ public class User implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     Integer id;
 
+    @Setter
     @NotBlank(message = "Username is mandatory")
     String username;
 
