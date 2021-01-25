@@ -8,9 +8,10 @@ public interface ICrudService<T> {
 
     public List<T> readAll();
 
-    public T update(T objet);
+    public T update(Integer id,T objet);
 
-    public void delete(T objet);
+    public void delete(Integer id);
 
+    public T readByid(Integer id);
 
 }

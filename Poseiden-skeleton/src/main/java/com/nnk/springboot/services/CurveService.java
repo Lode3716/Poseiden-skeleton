@@ -26,13 +26,26 @@ public class CurveService implements ICurveService {
     JMapper<CurvePoint, CurvePointDto> curvePointUnJMapper;
 
 
+    /**
+     * Convert a CurvePointDto to CurvePoint and save it in the database.
+     * When it's recorded, we return here.
+     *
+     * @param bidListDto to save
+     * @return the CurvePoint saved and converted the CurvePointDto
+     */
     @Override
     public CurvePointDto save(CurvePointDto curvePointDto) {
         CurvePoint curvePoint = curvePointRepository.save(curvePointUnJMapper.getDestination(curvePointDto));
-        log.debug("Service : CurvePoint is save in Bdd : {} ", curvePoint);
+        log.debug("Service : CurvePoint is save in Bdd : {} ", curvePoint.getCurveId());
         return curvePointJMapper.getDestination(curvePoint);
     }
 
+
+    /**
+     * Find list CurvePoint and Convert CurvePointDto
+     *
+     * @return the list of CurvePointDto
+     */
     @Override
     public List<CurvePointDto> readAll() {
         List<CurvePointDto> dtoList = new ArrayList<>();
@@ -45,22 +58,53 @@ public class CurveService implements ICurveService {
         return dtoList;
     }
 
+
+    /**
+     * Check id exist, if valid update CurvePoint
+     *
+     * @param curvePointDto to update
+     * @return the CurvePoint update and converted the CurvePointDto
+     */
     @Override
-    public CurvePointDto update(CurvePointDto curvePointDto) {
-        CurvePoint updateCurvePoint = existById(curvePointUnJMapper.getDestination(curvePointDto).getId());
+    public CurvePointDto update(Integer id,CurvePointDto curvePointDto) {
+        CurvePoint updateCurvePoint = existById(id);
         updateCurvePoint.setCurveId(curvePointDto.getCurveId());
         updateCurvePoint.setTerm(curvePointDto.getTerm());
         updateCurvePoint.setValue(curvePointDto.getValue());
+        log.debug("Service : update list curvePointDto : {} ", updateCurvePoint.getId());
         return curvePointJMapper.getDestination(curvePointRepository.save(updateCurvePoint));
     }
 
+    /**
+     * Check id exist, if valid delete CurvePoint
+     *
+     * @param id to delete
+     */
     @Override
-    public void delete(CurvePointDto curvePointDto) {
-        curvePointRepository.deleteById(curvePointDto.getId());
-        log.debug("Service : delete curvePointDto : {} ", curvePointDto.getId());
+    public void delete(Integer id) {
+        curvePointRepository.deleteById(id);
+        log.debug("Service : delete curvePointDto : {} ", id);
+    }
+
+    /**
+     * Find CurvePoint By id
+     * @param id
+     * @return the curvePointDto find or issue IllegalArgumentException
+     */
+    @Override
+    public CurvePointDto readByid(Integer id) {
+        CurvePoint curvePoint=curvePointRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid Curve Point Id:" + id));
+        log.info("Service : Read by Id  CurvePointDto - SUCCESS");
+        return curvePointJMapper.getDestination(curvePoint);
     }
 
 
+    /**
+     * Find CurvePoint By id
+     * @param id
+     * @return the curvePoint find or issue CurvePointNotFoundException
+     */
     public CurvePoint existById(Integer id) {
         return curvePointRepository.findById(id)
                 .orElseThrow(() -> new CurvePointNotFoundException("There is no curvePoint with this id " + id));
