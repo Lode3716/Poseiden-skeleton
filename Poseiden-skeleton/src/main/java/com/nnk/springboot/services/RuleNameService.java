@@ -27,6 +27,14 @@ public class RuleNameService implements IRuleNameService {
     JMapper<RuleName, RuleNameDto> ruleNameUnJMapper;
 
 
+    /**
+     *
+     * Convert a RuleNameDto to RuleName and save it in the database.
+     * When it's recorded, we return here.
+     *
+     * @param ruleNameDto
+     * @return
+     */
     @Override
     public RuleNameDto save(RuleNameDto ruleNameDto) {
         RuleName rl = ruleNameRepository.save(ruleNameUnJMapper.getDestination(ruleNameDto));
@@ -34,6 +42,12 @@ public class RuleNameService implements IRuleNameService {
         return ruleNameJMapper.getDestination(rl);
     }
 
+
+    /**
+     * Find list RuleName and Convert RuleNameDto
+     *
+     * @return the list of RuleNameDto
+     */
     @Override
     public List<RuleNameDto> readAll() {
         List<RuleNameDto> ruleNameDtoList = new ArrayList<>();
@@ -47,23 +61,55 @@ public class RuleNameService implements IRuleNameService {
         return ruleNameDtoList;
     }
 
+    /**
+     * Check id exist, if valid update RuleName
+     *
+     * @param id
+     * @param ruleNameDto to update
+     * @return the RuleName update and converted the RuleNameDto
+     */
     @Override
-    public RuleNameDto update(RuleNameDto ruleNameDto) {
-        RuleName updateRuleName = existById(ruleNameDto.getId());
+    public RuleNameDto update(Integer id,RuleNameDto ruleNameDto) {
+        log.info("Affiche : {}",ruleNameDto);
+        RuleName updateRuleName = existById(id);
         updateRuleName.setName(ruleNameDto.getName());
         updateRuleName.setDescription(ruleNameDto.getDescription());
         updateRuleName.setJson(ruleNameDto.getJson());
         updateRuleName.setSqlPart(ruleNameDto.getSqlPart());
         updateRuleName.setSqlStr(ruleNameDto.getSqlStr());
         updateRuleName.setTemplate(ruleNameDto.getTemplate());
+        log.debug("Service : update ruleName : {} ", updateRuleName.getId());
         return ruleNameJMapper.getDestination(ruleNameRepository.save(updateRuleName));
     }
 
+    /**
+     * Check id exist, if valid delete ruleName
+     *
+     * @param id to delete
+     */
     @Override
-    public void delete(RuleNameDto ruleNameDto) {
-        ruleNameRepository.deleteById(ruleNameDto.getId());
+    public void delete(Integer id) {
+        ruleNameRepository.deleteById(id);
+        log.info("Service delete ruleName id : {}",id);
     }
 
+    /**
+     * Find Rule  By id
+     * @param id
+     * @return the RuleNameDto find or issue IllegalArgumentException
+     */
+    @Override
+    public RuleNameDto readByid(Integer id) {
+        RuleName findRuleNameId= ruleNameRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid ruleName Id:" + id));
+        log.info("Service : Read by Id ruleName - SUCCESS");
+        return ruleNameJMapper.getDestination(findRuleNameId);
+    }
+
+    /**
+     * Find RuleName By id
+     * @param id
+     * @return the RuleName find or issue RuleNameNotFoundException
+     */
     public RuleName existById(Integer id) {
         return ruleNameRepository.findById(id)
                 .orElseThrow(() -> new RuleNameNotFoundException("There is no ruleName with this id " + id));

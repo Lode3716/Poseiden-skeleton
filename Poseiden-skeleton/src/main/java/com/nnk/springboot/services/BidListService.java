@@ -61,6 +61,7 @@ public class BidListService implements IBidListService {
     /**
      * Check id exist, if valid update BidList
      *
+     * @param id
      * @param bidListDto to update
      * @return the BidList update and converted the BidListDto
      */

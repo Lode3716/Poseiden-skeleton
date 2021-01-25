@@ -3,7 +3,7 @@
 	  xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="utf-8"/>
-<title>Home</title>
+<title>Rule</title>
 <link rel="stylesheet" href="../../css/bootstrap.min.css" >
 </head>
 <body>
@@ -40,7 +40,19 @@
 				</tr>
 			</thead>
 			<tbody>
-			<!-- TODO: Show all RuleName to the table, the Action column will have Edit & Delete buttons -->
+			<tr th:each="rule : ${rules}">
+				<td style="width: 10%" th:text="${rule.id}"></td>
+				<td th:text="${rule.name}"></td>
+				<td th:text="${rule.description}"></td>
+				<td th:text="${rule.json}"></td>
+				<td th:text="${rule.template}"></td>
+				<td th:text="${rule.sqlStr}"></td>
+				<td th:text="${rule.sqlPart}"></td>
+				<td style="width: 15%" class="text-center">
+					<a th:href="@{/ruleName/update/{id}(id=${rule.id})}">Edit</a>&nbsp;|&nbsp;
+					<a th:href="@{/ruleName/delete/{id}(id=${rule.id})}">Delete</a>
+				</td>
+			</tr>
 			</tbody>
 		</table>
 	</div>

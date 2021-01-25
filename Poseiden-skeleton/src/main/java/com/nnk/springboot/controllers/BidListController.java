@@ -94,7 +94,7 @@ public class BidListController {
      * @param bidListDto
      * @param result
      * @param model
-     * @return The URI to the bidList/add, if result has errors.
+     * @return The URI to the bidList/update, if result has errors.
      *         Else, redirects to /bidList/list endpoint
      */
     @PostMapping("/bidList/update/{id}")
