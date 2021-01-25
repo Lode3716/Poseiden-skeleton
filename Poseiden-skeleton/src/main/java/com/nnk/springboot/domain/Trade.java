@@ -4,13 +4,12 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.PositiveOrZero;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-@FieldDefaults(level= AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -20,26 +19,28 @@ import java.sql.Timestamp;
 public class Trade implements Serializable {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @Setter
+    @Column(name = "tradeId")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     Integer tradeId;
 
     @Setter
     @NotNull(message = "Account is mandatory")
     String account;
 
+    @Setter
     @NotNull(message = "Type is mandatory")
     String type;
 
-    @Pattern(regexp = "^0$|^[1-9]\\d*$|^\\.\\d+$|^0\\.\\d*$|^[1-9]\\d*\\.\\d*$")
+    @Setter
+    @PositiveOrZero
+    @NotNull
     Double buyQuantity;
 
-    @Pattern(regexp = "^0$|^[1-9]\\d*$|^\\.\\d+$|^0\\.\\d*$|^[1-9]\\d*\\.\\d*$")
     Double sellQuantity;
 
-    @Pattern(regexp = "^0$|^[1-9]\\d*$|^\\.\\d+$|^0\\.\\d*$|^[1-9]\\d*\\.\\d*$")
     Double buyPrice;
 
-    @Pattern(regexp = "^0$|^[1-9]\\d*$|^\\.\\d+$|^0\\.\\d*$|^[1-9]\\d*\\.\\d*$")
     Double sellPrice;
 
     String benchmark;
@@ -74,5 +75,11 @@ public class Trade implements Serializable {
     public Trade(@NotNull(message = "Account is mandatory") String account, @NotNull(message = "Type is mandatory") String type) {
         this.account = account;
         this.type = type;
+    }
+
+    public Trade(@NotNull(message = "Account is mandatory") String account, @NotNull(message = "Type is mandatory") String type, @PositiveOrZero @NotNull Double buyQuantity) {
+        this.account = account;
+        this.type = type;
+        this.buyQuantity = buyQuantity;
     }
 }

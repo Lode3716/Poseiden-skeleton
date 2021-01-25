@@ -2,10 +2,7 @@ package com.nnk.springboot.dto;
 
 
 import com.googlecode.jmapper.JMapper;
-import com.nnk.springboot.domain.BidList;
-import com.nnk.springboot.domain.CurvePoint;
-import com.nnk.springboot.domain.Rating;
-import com.nnk.springboot.domain.RuleName;
+import com.nnk.springboot.domain.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -54,4 +51,13 @@ public class ConfigDTO {
     }
 
 
+    @Bean
+    JMapper<TradeDto, Trade> tradeJMapper() {
+        return new JMapper<>(TradeDto.class,Trade.class);
+    }
+
+    @Bean
+    JMapper<Trade, TradeDto> tradeUnJMapper() {
+        return new JMapper<>(Trade.class,TradeDto.class);
+    }
 }
