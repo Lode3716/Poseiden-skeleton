@@ -1,6 +1,9 @@
 package com.nnk.springboot.controllers;
 
-import com.nnk.springboot.domain.Rating;
+import com.nnk.springboot.dto.RatingDto;
+import com.nnk.springboot.services.IRatingService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -11,44 +14,119 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
 
+@Slf4j
 @Controller
 public class RatingController {
-    // TODO: Inject Rating service
 
+
+    @Autowired
+    private IRatingService ratingService;
+
+    /**
+     * Send ratingDto list.
+     *
+     * @param model
+     * @return The URI to the rating/list
+     */
     @RequestMapping("/rating/list")
-    public String home(Model model)
-    {
-        // TODO: find all Rating, add to model
+    public String home(Model model) {
+        log.debug("GET : /rating/list");
+        model.addAttribute("ratings", ratingService.readAll());
+        log.debug("GET : /rating/list - SUCCESS");
         return "rating/list";
     }
 
+
+    /**
+     * Send ratingDto to save.
+     *
+     * @param ratingDto
+     * @return The URI to the rating/add
+     */
     @GetMapping("/rating/add")
-    public String addRatingForm(Rating rating) {
+    public String addRatingForm(RatingDto ratingDto) {
+        log.debug("GET : /rating/add");
         return "rating/add";
     }
 
+
+    /**
+     * Save a new ratingDto
+     *
+     * @param rating
+     * @param result
+     * @param model
+     * @returnThe URI to the rating/add if result has errors.
+     * Else, redirects to /rating/list endpoint
+     */
     @PostMapping("/rating/validate")
-    public String validate(@Valid Rating rating, BindingResult result, Model model) {
-        // TODO: check data valid and save to db, after saving return Rating list
+    public String validate(@Valid RatingDto ratingDto, BindingResult result, Model model) {
+        log.debug("POST : /rating/validate");
+        if (!result.hasErrors()) {
+            ratingService.save(ratingDto);
+            log.info("POST : /rating/add - SUCCES");
+            model.addAttribute("rating", ratingService.readAll());
+            return "redirect:/rating/list";
+        }
         return "rating/add";
     }
 
+    /**
+     * Send to update form an existing ratingDto
+     *
+     * @param id
+     * @param model
+     * @return the URI to the rating/update
+     */
     @GetMapping("/rating/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        // TODO: get Rating by Id and to model then show to the form
+        log.debug("GET : /rating/update/{}", id);
+        RatingDto dto = ratingService.readByid(id);
+        model.addAttribute("rating", dto);
+        log.info("GET : /rating/update/" + id + " - SUCCES");
         return "rating/update";
     }
 
+    /***
+     *
+     * RatingDTO is update
+     *
+     * @param id
+     * @param ratingDto
+     * @param result
+     * @param model
+     * @return The URI to the rating/add, if result has errors.
+     *        Else, redirects to /rating/list endpoint
+     */
     @PostMapping("/rating/update/{id}")
-    public String updateRating(@PathVariable("id") Integer id, @Valid Rating rating,
-                             BindingResult result, Model model) {
-        // TODO: check required fields, if valid call service to update Rating and return Rating list
+    public String updateRating(@PathVariable("id") Integer id, @Valid RatingDto ratingDto,
+                               BindingResult result, Model model) {
+        log.debug("POST : /rating/update/{}", id);
+
+        if (result.hasErrors()) {
+            log.info("POST : /rating/update/{} - ERROR", id);
+            return "rating/update";
+        }
+        ratingService.update(id, ratingDto);
+        model.addAttribute("rating", ratingService.readAll());
+        log.info("POST : /rating/update/{} - SUCCESS", id);
         return "redirect:/rating/list";
     }
 
+
+    /**
+     * Find Rating by Id and delete the rating
+     *
+     * @param id
+     * @param model
+     * @return
+     */
     @GetMapping("/rating/delete/{id}")
     public String deleteRating(@PathVariable("id") Integer id, Model model) {
-        // TODO: Find Rating by Id and delete the Rating, return to Rating list
+        log.debug("DELETE : /rating/delete/{}", id);
+        ratingService.delete(id);
+        log.info("DELETE : /rating/delete/{} - SUCCESS", id);
+        model.addAttribute("rating", ratingService.readAll());
         return "redirect:/rating/list";
     }
 }

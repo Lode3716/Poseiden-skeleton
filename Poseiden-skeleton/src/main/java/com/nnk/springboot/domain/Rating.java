@@ -21,7 +21,6 @@ import java.sql.Timestamp;
 public class Rating implements Serializable {
 
     @Id
-    @NotNull
     @GeneratedValue(strategy= GenerationType.AUTO)
     Integer id ;
 

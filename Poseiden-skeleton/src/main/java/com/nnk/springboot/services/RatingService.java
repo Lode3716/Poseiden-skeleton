@@ -25,6 +25,14 @@ public class RatingService implements IRatingService {
     @Autowired
     JMapper<Rating, RatingDto> ratingUnJMapper;
 
+
+    /**
+     * Convert a RatingDto to Rating and save it in the database.
+     * When it's recorded, we return here.
+     *
+     * @param RatingDto to save
+     * @return the Rating saved and converted the RatingDto
+     */
     @Override
     public RatingDto save(RatingDto ratingDto) {
         Rating rt = ratingRepository.save(ratingUnJMapper.getDestination(ratingDto));
@@ -32,6 +40,11 @@ public class RatingService implements IRatingService {
         return ratingJMapper.getDestination(rt);
     }
 
+    /**
+     * Find list Rating and Convert RatingDto
+     *
+     * @return the list of RatingDto
+     */
     @Override
     public List<RatingDto> readAll() {
         List<RatingDto> listRatin = new ArrayList<>();
@@ -41,21 +54,54 @@ public class RatingService implements IRatingService {
         return listRatin;
     }
 
+    /**
+     * Check id exist, if valid update Rating
+     *
+     * @param RatingDto to update
+     * @return the Rating update and converted the RatingDto
+     */
     @Override
-    public RatingDto update(RatingDto rtDto) {
-        Rating updateRating = existById(rtDto.getId());
+    public RatingDto update(Integer id, RatingDto rtDto) {
+        Rating updateRating = existById(id);
         updateRating.setFitchRating(rtDto.getFitchRating());
         updateRating.setMoodysRating(rtDto.getMoodysRating());
         updateRating.setSandPRating(rtDto.getSandPRating());
         updateRating.setOrderNumber(rtDto.getOrderNumber());
+        log.debug("Service : update rating: {} ", updateRating.getId());
         return ratingJMapper.getDestination(ratingRepository.save(updateRating));
     }
 
+    /**
+     * Check id exist, if valid delete rating
+     *
+     * @param id to delete
+     */
     @Override
-    public void delete(RatingDto ratingDto) {
-        ratingRepository.deleteById(ratingDto.getId());
+    public void delete(Integer id) {
+        ratingRepository.deleteById(id);
+        log.info("Service delete rating id : {}", id);
     }
 
+
+    /**
+     * Find Rating By id
+     *
+     * @param id
+     * @return the RatingDto find or issue IllegalArgumentException
+     */
+    @Override
+    public RatingDto readByid(Integer id) {
+        Rating findRatingListId = ratingRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid Rating Id:" + id));
+        log.info("Service : Read by Id rating - SUCCESS");
+        return ratingJMapper.getDestination(findRatingListId);
+    }
+
+    /**
+     * Find Rating By id
+     *
+     * @param id
+     * @return the Rating find or issue RatingNotFoundException
+     */
     public Rating existById(Integer id) {
         return ratingRepository.findById(id)
                 .orElseThrow(() -> new RatingNotFoundException("There is no rating with this id " + id));
