@@ -36,7 +36,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User update(User user) {
+    public User update(Integer id,User user) {
 
             User updateUser = existById(user.getId());
             updateUser.setPassword(user.getPassword());
@@ -48,8 +48,13 @@ public class UserService implements IUserService {
 
 
     @Override
-    public void delete(User user) {
-        userRepository.deleteById(existById(user.getId()).getId());
+    public void delete(Integer id) {
+        userRepository.deleteById(existById(id).getId());
+    }
+
+    @Override
+    public User readByid(Integer id) {
+        return null;
     }
 
 
