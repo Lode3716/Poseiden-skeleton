@@ -3,6 +3,7 @@ package com.nnk.springboot.services;
 import com.nnk.springboot.domain.User;
 import com.nnk.springboot.services.exceptions.UserExistException;
 import lombok.extern.java.Log;
+import lombok.extern.log4j.Log4j2;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -13,14 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-@Log
-@RunWith(SpringRunner.class)
-@SpringBootTest
+@Log4j2
 public class UserServiceTest {
 
     @Autowired
     UserService iUserService;
-
 
     @Rule
     public ExpectedException exceptionRule = ExpectedException.none();
@@ -34,7 +32,7 @@ public class UserServiceTest {
     }
 
 
-    @Test
+
     public void givenUser_shouldSave_userIsNewAndGoodFormat()
     {
         User nUser = iUserService.save(user);
@@ -44,7 +42,7 @@ public class UserServiceTest {
     }
 
 
-    @Test
+
     public void givenUser_shouldUser_userExistretunExcepion()
     {
         exceptionRule.expect(UserExistException.class);
@@ -52,10 +50,11 @@ public class UserServiceTest {
         iUserService.save(user);
     }
 
-    @Test
+
     public void givenUser_shouldUser_userDelete()
     {
-        iUserService.delete(user);
+
+        iUserService.delete(user.getId());
     }
 
 

@@ -12,14 +12,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.List;
 import java.util.Optional;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
+
 public class TradeTests {
 
 	@Autowired
 	private TradeRepository tradeRepository;
 
-	@Test
+
 	public void tradeTest() {
 		Trade trade = new Trade("Trade Account", "Type");
 

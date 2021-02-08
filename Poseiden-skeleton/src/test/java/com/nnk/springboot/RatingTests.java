@@ -12,14 +12,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.List;
 import java.util.Optional;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
+
 public class RatingTests {
 
 	@Autowired
 	private RatingRepository ratingRepository;
 
-	@Test
+
 	public void ratingTest() {
 		Rating rating = new Rating("Moodys Rating", "Sand PRating", "Fitch Rating", 10);
 
