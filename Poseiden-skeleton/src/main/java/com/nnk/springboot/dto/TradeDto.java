@@ -27,4 +27,10 @@ public class TradeDto {
     @NotNull
     private Double buyQuantity;
 
+
+    public TradeDto(@NotBlank(message = "Account is mandatory") String account, @NotBlank(message = "Type is mandatory") String type, @PositiveOrZero(message = "Not negative") @NotNull Double buyQuantity) {
+        this.account = account;
+        this.type = type;
+        this.buyQuantity = buyQuantity;
+    }
 }

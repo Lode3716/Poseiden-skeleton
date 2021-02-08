@@ -2,7 +2,7 @@ package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.dto.TradeDto;
 import com.nnk.springboot.services.ITradeService;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
 
-@Slf4j
+@Log4j2
 @Controller
 public class TradeController {
 
@@ -49,7 +49,6 @@ public class TradeController {
     }
 
     /**
-     *
      * Save a new TradeDto
      *
      * @param tradeDto

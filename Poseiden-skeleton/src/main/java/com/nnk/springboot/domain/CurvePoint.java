@@ -1,5 +1,6 @@
 package com.nnk.springboot.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -7,6 +8,7 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 
 @Data
+@AllArgsConstructor
 @Entity
 @Table(name = "curvepoint")
 public class CurvePoint implements Serializable {

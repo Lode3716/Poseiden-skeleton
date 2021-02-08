@@ -89,7 +89,7 @@ public class RuleNameService implements IRuleNameService {
      */
     @Override
     public void delete(Integer id) {
-        ruleNameRepository.deleteById(id);
+        ruleNameRepository.deleteById(existById(id).getId());
         log.info("Service delete ruleName id : {}",id);
     }
 

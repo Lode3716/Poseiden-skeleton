@@ -82,7 +82,7 @@ public class CurveService implements ICurveService {
      */
     @Override
     public void delete(Integer id) {
-        curvePointRepository.deleteById(id);
+        curvePointRepository.deleteById(existById(id).getId());
         log.debug("Service : delete curvePointDto : {} ", id);
     }
 

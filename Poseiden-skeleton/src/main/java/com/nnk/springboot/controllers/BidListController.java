@@ -2,8 +2,7 @@ package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.dto.BidListDto;
 import com.nnk.springboot.services.IBidListService;
-
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.validation.Valid;
 
 
-@Slf4j
+@Log4j2
 @Controller
 public class BidListController {
 
@@ -46,7 +45,7 @@ public class BidListController {
      */
     @GetMapping("/bidList/add")
     public String addBidForm(BidListDto bidListDto) {
-        log.debug("GET : /bidList/add");
+        log.info("GET : /bidList/add");
         return "bidList/add";
     }
 
@@ -57,7 +56,7 @@ public class BidListController {
      * @param result
      * @param model
      * @return The URI to the bidList/add if result has errors.
-     *         Else, redirects to /bidList/list endpoint
+     * Else, redirects to /bidList/list endpoint
      */
     @PostMapping("/bidList/validate")
     public String validate(@Valid BidListDto bidListDto, BindingResult result, Model model) {
@@ -95,17 +94,17 @@ public class BidListController {
      * @param result
      * @param model
      * @return The URI to the bidList/update, if result has errors.
-     *         Else, redirects to /bidList/list endpoint
+     * Else, redirects to /bidList/list endpoint
      */
     @PostMapping("/bidList/update/{id}")
     public String updateBid(@PathVariable("id") Integer id, @Valid BidListDto bidListDto,
                             BindingResult result, Model model) {
         log.debug("POST : /bidList/update/{}", id);
 
-            if (result.hasErrors()) {
-                log.info("POST : /bidList/update/{} - ERROR", id);
-                return "bidList/update";
-            }
+        if (result.hasErrors()) {
+            log.info("POST : /bidList/update/{} - ERROR", id);
+            return "bidList/update";
+        }
         bidListService.update(id, bidListDto);
         model.addAttribute("bidList", bidListService.readAll());
         log.info("POST : /bidList/update/{} - SUCCESS", id);

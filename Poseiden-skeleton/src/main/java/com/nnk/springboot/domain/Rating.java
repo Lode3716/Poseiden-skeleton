@@ -1,36 +1,31 @@
 package com.nnk.springboot.domain;
 
 import lombok.*;
-import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import java.io.Serializable;
-import java.sql.Timestamp;
 
-@FieldDefaults(level=AccessLevel.PRIVATE)
+@Setter
+@Getter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
 @EqualsAndHashCode(of = {"id"})
 @Entity
 @Table(name = "rating")
 public class Rating implements Serializable {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    Integer id ;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
 
-    String moodysRating;
+    private String moodysRating;
 
-    String sandPRating;
+    private String sandPRating;
 
-    String fitchRating;
+    private String fitchRating;
 
-    Integer orderNumber;
+    private Integer orderNumber;
 
 
     public Rating(String moodysRating, String sandPRating, String fitchRating, Integer orderNumber) {

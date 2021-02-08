@@ -2,10 +2,7 @@ package com.nnk.springboot.dto;
 
 
 import com.googlecode.jmapper.annotations.JGlobalMap;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -16,6 +13,7 @@ import javax.validation.constraints.PositiveOrZero;
 @AllArgsConstructor
 @NoArgsConstructor
 @JGlobalMap
+@ToString
 public class BidListDto {
 
     private Integer bidListId;

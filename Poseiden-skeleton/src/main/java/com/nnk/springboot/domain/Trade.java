@@ -9,67 +9,68 @@ import javax.validation.constraints.PositiveOrZero;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-@FieldDefaults(level = AccessLevel.PRIVATE)
+
+@Getter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
 @EqualsAndHashCode(of = {"tradeId"})
 @Entity
 @Table(name = "trade")
 public class Trade implements Serializable {
 
     @Id
-    @Setter
     @Column(name = "tradeId")
+    @Setter
     @GeneratedValue(strategy = GenerationType.AUTO)
-    Integer tradeId;
+    private Integer tradeId;
 
     @Setter
     @NotNull(message = "Account is mandatory")
-    String account;
+    private String account;
 
     @Setter
     @NotNull(message = "Type is mandatory")
-    String type;
+    private String type;
 
     @Setter
     @PositiveOrZero
     @NotNull
-    Double buyQuantity;
+    private Double buyQuantity;
 
-    Double sellQuantity;
+    private Double sellQuantity;
 
-    Double buyPrice;
+    private Double buyPrice;
 
-    Double sellPrice;
+    private Double sellPrice;
 
-    String benchmark;
+    private String benchmark;
 
-    Timestamp tradeDate;
+    private Timestamp tradeDate;
 
-    String security;
+    private String security;
 
-    String status;
+    private String status;
 
-    String trader;
+    private String trader;
 
-    String book;
+    private String book;
 
-    String creationName;
+    private String creationName;
 
-    Timestamp creationDate;
+    private Timestamp creationDate;
 
-    String revisionName;
+    private String revisionName;
 
-    Timestamp revisionDate;
+    private Timestamp revisionDate;
 
-    String dealName;
+    private String dealName;
 
-    String dealType;
+    private String dealType;
 
-    String sourceListId;
+    private String sourceListId;
 
-    String side;
+    private String side;
 
 
     public Trade(@NotNull(message = "Account is mandatory") String account, @NotNull(message = "Type is mandatory") String type) {
@@ -82,4 +83,5 @@ public class Trade implements Serializable {
         this.type = type;
         this.buyQuantity = buyQuantity;
     }
+
 }
