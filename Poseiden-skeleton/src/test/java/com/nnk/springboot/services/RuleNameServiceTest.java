@@ -6,13 +6,14 @@ import com.nnk.springboot.dto.RuleNameDto;
 import com.nnk.springboot.repositories.RuleNameRepository;
 import com.nnk.springboot.services.exceptions.RuleNameNotFoundException;
 import lombok.extern.java.Log;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,7 +25,7 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.when;
 
 @Log
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class RuleNameServiceTest {
 
     @InjectMocks
@@ -49,7 +50,7 @@ public class RuleNameServiceTest {
 
     private static List<RuleNameDto> listRuleNameDto;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         ruleNameDto1 = new RuleNameDto(1, "name", "description", "json",
                 "template", "sqlStr", "sqlPart");
@@ -134,10 +135,10 @@ public class RuleNameServiceTest {
         inOrder.verify(ruleNameRepository).deleteById(anyInt());
     }
 
-    @Test(expected = RuleNameNotFoundException.class)
+    @Test
     public void givenUnFoundRuleName_whenDeleteRuleName_thenRuleNameNotFoundException() {
         when(ruleNameRepository.findById(anyInt())).thenReturn(java.util.Optional.empty());
-        ruleNameService.delete(anyInt());
+        Assertions.assertThrows(RuleNameNotFoundException.class, () ->ruleNameService.delete(anyInt()));
     }
 
     @Test
@@ -152,11 +153,11 @@ public class RuleNameServiceTest {
         assertThat(result).isEqualTo(ruleName1);
     }
 
-    @Test(expected = RuleNameNotFoundException.class)
+    @Test
     public void givenUnFoundIdRuleDto_whenFoundRuleName_thenRuleNameNotFoundException() {
         when(ruleNameRepository.findById(anyInt())).thenReturn(java.util.Optional.empty());
 
-        ruleNameService.existById(anyInt());
+        Assertions.assertThrows(RuleNameNotFoundException.class, () -> ruleNameService.existById(anyInt()));
 
     }
 }

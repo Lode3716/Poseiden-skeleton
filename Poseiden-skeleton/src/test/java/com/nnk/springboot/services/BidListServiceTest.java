@@ -6,24 +6,26 @@ import com.nnk.springboot.dto.BidListDto;
 import com.nnk.springboot.repositories.BidListRepository;
 import com.nnk.springboot.services.exceptions.BidListNotFoundException;
 import lombok.extern.java.Log;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.when;
 
 @Log
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class BidListServiceTest {
 
     @InjectMocks
@@ -48,7 +50,7 @@ public class BidListServiceTest {
 
     private static List<BidListDto> listBidListDto;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         bidListDto1 = new BidListDto(1, "account", "type", 10d);
         bidListDto2 = new BidListDto(2, "account2", "type2", 102d);
@@ -60,11 +62,11 @@ public class BidListServiceTest {
                 null, null, null, null, null, null, null,
                 null, null, null, null, null, null,
                 null, null, null);
-        listBidListDto = Arrays.asList(bidListDto1,bidListDto2);
+        listBidListDto = Arrays.asList(bidListDto1, bidListDto2);
     }
 
     @Test
-    public void givenSearchListOfBidListDto_whenAllBidList_thenReturnListOfBidListDto () {
+    public void givenSearchListOfBidListDto_whenAllBidList_thenReturnListOfBidListDto() {
 
 
         when(bidListRepository.findAll()).thenReturn(Arrays.asList(bidList1, bidList2));
@@ -84,7 +86,7 @@ public class BidListServiceTest {
     }
 
     @Test
-    public void givenBidListDto_whenSaveBidList_thenBidListIsSavedCorrectly () {
+    public void givenBidListDto_whenSaveBidList_thenBidListIsSavedCorrectly() {
         BidListDto bidListDto = new BidListDto("account", "type", 10d);
         BidList bidList = new BidList("account", "type", 10d);
 
@@ -103,17 +105,17 @@ public class BidListServiceTest {
 
     @Test
     public void givenIdBidAndbidListDto_whenUpdateBidList_thenBidListIsUpdateCorrectly() {
-        BidList updateBidList = new BidList(1,"account1", "type1", 25d, null, null,
+        BidList updateBidList = new BidList(1, "account1", "type1", 25d, null, null,
                 null, null, null, null, null, null, null,
                 null, null, null, null, null, null,
                 null, null, null);
-        BidListDto updateDto = new BidListDto(1,"account1", "type1", 25d);
+        BidListDto updateDto = new BidListDto(1, "account1", "type1", 25d);
 
         when(bidListRepository.findById(anyInt())).thenReturn(java.util.Optional.ofNullable(bidList1));
         when(bidListRepository.save(any(BidList.class))).thenReturn(updateBidList);
         when(bidListJMapper.getDestination(any(BidList.class))).thenReturn(updateDto);
 
-        BidListDto result = bidListService.update(1, new BidListDto(1,"account1", "type1", 25d));
+        BidListDto result = bidListService.update(1, new BidListDto(1, "account1", "type1", 25d));
 
         assertThat(result).isEqualTo(updateDto);
         InOrder inOrder = inOrder(bidListRepository, bidListJMapper);
@@ -133,15 +135,15 @@ public class BidListServiceTest {
         inOrder.verify(bidListRepository).deleteById(anyInt());
     }
 
-    @Test(expected = BidListNotFoundException.class)
+    @Test
     public void givenUnFoundBidList_whenDeleteBidList_thenBidListNotFoundException() {
         when(bidListRepository.findById(anyInt())).thenReturn(java.util.Optional.empty());
-        bidListService.delete(anyInt());
+        Assertions.assertThrows(BidListNotFoundException.class,()->bidListService.delete(anyInt()));
     }
 
     @Test
     public void givenIdBidDto_whenFoundBidList_thenReturnBidlistFound() {
-        BidList bidListFind = new BidList(1,"account1", "type1", 10d, null, null,
+        BidList bidListFind = new BidList(1, "account1", "type1", 10d, null, null,
                 null, null, null, null, null, null, null,
                 null, null, null, null, null, null,
                 null, null, null);
@@ -153,10 +155,10 @@ public class BidListServiceTest {
         assertThat(result).isEqualTo(bidList1);
     }
 
-    @Test(expected = BidListNotFoundException.class)
+    @Test
     public void givenUnFoundIdBidDto_whenFoundBidList_thenBidListNotFoundException() {
         when(bidListRepository.findById(anyInt())).thenReturn(java.util.Optional.empty());
 
-        bidListService.existById(anyInt());
+        Assertions.assertThrows(BidListNotFoundException.class,()->bidListService.existById(anyInt()));
     }
 }

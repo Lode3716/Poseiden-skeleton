@@ -6,13 +6,14 @@ import com.nnk.springboot.dto.TradeDto;
 import com.nnk.springboot.repositories.TradeRepository;
 import com.nnk.springboot.services.exceptions.TradeNotFoundException;
 import lombok.extern.java.Log;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,7 +25,7 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.when;
 
 @Log
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class TradeServiceTest {
 
     @InjectMocks
@@ -49,7 +50,7 @@ public class TradeServiceTest {
 
     private static List<TradeDto> listTradeDto;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
 
         tradeDto1 = new TradeDto(1, "account1", "type1", 10d);
@@ -93,7 +94,7 @@ public class TradeServiceTest {
 
         TradeDto asSave = tradeService.save(tradeDto);
 
-        assertThat(asSave).isEqualToComparingFieldByField(tradeDto1);
+        assertThat(asSave).isEqualTo(tradeDto1);
         InOrder inOrder = inOrder(tradeUnJMapper, tradeRepository, tradeJMapper);
         inOrder.verify(tradeUnJMapper).getDestination(any(TradeDto.class));
         inOrder.verify(tradeRepository).save(any(Trade.class));
@@ -130,10 +131,10 @@ public class TradeServiceTest {
         inOrder.verify(tradeRepository).deleteById(anyInt());
     }
 
-    @Test(expected = TradeNotFoundException.class)
+    @Test
     public void givenUnFoundTrade_whenDeleteTrade_thenTradeNotFoundException() {
         when(tradeRepository.findById(anyInt())).thenReturn(java.util.Optional.empty());
-        tradeService.delete(anyInt());
+        Assertions.assertThrows(TradeNotFoundException.class, () -> tradeService.delete(anyInt()));
     }
 
     @Test
@@ -148,10 +149,10 @@ public class TradeServiceTest {
         assertThat(result).isEqualTo(trade1);
     }
 
-    @Test(expected = TradeNotFoundException.class)
+    @Test
     public void givenUnFoundIdBidDto_whenFoundTrade_thenTradeNotFoundException() {
         when(tradeRepository.findById(anyInt())).thenReturn(java.util.Optional.empty());
 
-        tradeService.existById(anyInt());
+        Assertions.assertThrows(TradeNotFoundException.class, () -> tradeService.existById(anyInt()));
     }
 }

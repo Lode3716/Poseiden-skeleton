@@ -6,13 +6,14 @@ import com.nnk.springboot.dto.CurvePointDto;
 import com.nnk.springboot.repositories.CurvePointRepository;
 import com.nnk.springboot.services.exceptions.CurvePointNotFoundException;
 import lombok.extern.java.Log;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -27,7 +28,7 @@ import static org.mockito.Mockito.when;
 
 
 @Log
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class CurveServiceTest {
 
     @InjectMocks
@@ -52,7 +53,7 @@ public class CurveServiceTest {
 
     private static List<CurvePointDto> listCurvePointDto;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         curvePointDto1 = new CurvePointDto(1, 1, 10d, 101d);
         curvePointDto2 = new CurvePointDto(2, 2, 20d, 217d);
@@ -128,15 +129,16 @@ public class CurveServiceTest {
         inOrder.verify(curvePointRepository).deleteById(anyInt());
     }
 
-    @Test(expected = CurvePointNotFoundException.class)
+    @Test
     public void givenUnFoundCurvePoint_whenDeleteCurvePoint_thenCurvePointNotFoundException() {
         when(curvePointRepository.findById(anyInt())).thenReturn(java.util.Optional.empty());
-        curveService.delete(anyInt());
+        Assertions.assertThrows(CurvePointNotFoundException.class, () -> curveService.delete(anyInt()));
     }
 
     @Test
     public void givenIdPointDto_whenFoundCurvePoint_thenReturnCurvePointFound() {
-        CurvePoint curvePointFind =  new CurvePoint(1, 1, null, 10d, 101d, Timestamp.from(Instant.ofEpochSecond(System.currentTimeMillis())));;
+        CurvePoint curvePointFind = new CurvePoint(1, 1, null, 10d, 101d, Timestamp.from(Instant.ofEpochSecond(System.currentTimeMillis())));
+        ;
 
         when(curvePointRepository.findById(anyInt())).thenReturn(java.util.Optional.of(curvePointFind));
 
@@ -145,10 +147,10 @@ public class CurveServiceTest {
         assertThat(result).isEqualTo(curvePoint1);
     }
 
-    @Test(expected = CurvePointNotFoundException.class)
+    @Test
     public void givenUnFoundIdPointDto_whenFoundCurvePoint_thenCurvePointNotFoundException() {
         when(curvePointRepository.findById(anyInt())).thenReturn(java.util.Optional.empty());
-        curveService.existById(anyInt());
+        Assertions.assertThrows(CurvePointNotFoundException.class, () -> curveService.existById(anyInt()));
 
     }
 }

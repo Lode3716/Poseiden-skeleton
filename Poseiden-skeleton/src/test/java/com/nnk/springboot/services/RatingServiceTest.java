@@ -6,13 +6,14 @@ import com.nnk.springboot.dto.RatingDto;
 import com.nnk.springboot.repositories.RatingRepository;
 import com.nnk.springboot.services.exceptions.RatingNotFoundException;
 import lombok.extern.java.Log;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,7 +25,7 @@ import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.when;
 
 @Log
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class RatingServiceTest {
 
 
@@ -50,7 +51,7 @@ public class RatingServiceTest {
 
     private static List<RatingDto> listRatingDto;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         ratingDto1 = new RatingDto(1, "moodys", "standPRating", "fitchRating", 2);
         ratingDto2 = new RatingDto(2, "moodys", "standPRating", "fitchRating", 3);
@@ -80,7 +81,7 @@ public class RatingServiceTest {
 
     @Test
     public void givenRatingDto_whenSaveRating_thenRatingIsSavedCorrectly() {
-        RatingDto ratingDto = new RatingDto( "moodys", "standPRating", "fitchRating", 2);
+        RatingDto ratingDto = new RatingDto("moodys", "standPRating", "fitchRating", 2);
         Rating rating = new Rating("moodys", "standPRating", "fitchRating", 2);
 
         when(ratingUnJMapper.getDestination(any(RatingDto.class))).thenReturn(rating);
@@ -125,10 +126,10 @@ public class RatingServiceTest {
         inOrder.verify(ratingRepository).deleteById(anyInt());
     }
 
-    @Test(expected = RatingNotFoundException.class)
+    @Test
     public void givenUnFoundRating_whenDeleteRating_thenRatingNotFoundException() {
         when(ratingRepository.findById(anyInt())).thenReturn(java.util.Optional.empty());
-        ratingService.delete(anyInt());
+        Assertions.assertThrows(RatingNotFoundException.class, () -> ratingService.delete(anyInt()));
     }
 
     @Test
@@ -142,11 +143,11 @@ public class RatingServiceTest {
         assertThat(result).isEqualTo(rating1);
     }
 
-    @Test(expected = RatingNotFoundException.class)
+    @Test
     public void givenUnFoundIdRatingDto_whenFoundRating_thenRatingNotFoundException() {
         when(ratingRepository.findById(anyInt())).thenReturn(java.util.Optional.empty());
 
-        ratingService.existById(anyInt());
+        Assertions.assertThrows(RatingNotFoundException.class, () -> ratingService.existById(anyInt()));
 
     }
 }
