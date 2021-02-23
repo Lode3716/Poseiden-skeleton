@@ -60,4 +60,12 @@ public class ConfigDTO {
     JMapper<Trade, TradeDto> tradeUnJMapper() {
         return new JMapper<>(Trade.class,TradeDto.class);
     }
+
+    @Bean
+    JMapper<UserDto, User> userJMapper() { return new JMapper<>(UserDto.class,User.class); }
+
+    @Bean
+    JMapper<User, UserDto> userUnJMapper() {
+        return new JMapper<>(User.class,UserDto.class);
+    }
 }

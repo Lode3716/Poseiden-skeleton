@@ -22,20 +22,15 @@ public class User implements Serializable {
     Integer id;
 
     @Setter
-    @NotBlank(message = "Username is mandatory")
     String username;
 
     @Setter
-    //@Pattern(regexp = "^(?=.*[A-Z])(?=.*[!@#$&_*])(?=.*[0-9]).{8,15}$")
-    @NotBlank(message = "Password is mandatory")
     String password;
 
     @Setter
-    @NotBlank(message = "FullName is mandatory")
     String fullname;
 
     @Setter
-    @NotBlank(message = "Role is mandatory")
     String role;
 
     public User(@NotBlank(message = "Username is mandatory") String username, @Pattern(regexp = "^(?=.*[A-Z])(?=.*[!@#$&_*])(?=.*[0-9]).{8,15}$") @NotBlank(message = "Password is mandatory") String password, @NotBlank(message = "FullName is mandatory") String fullname, @NotBlank(message = "Role is mandatory") String role) {
