@@ -43,7 +43,7 @@ public class TradeController {
      * @return The URI to the trade/add
      */
     @GetMapping("/trade/add")
-    public String addUser(TradeDto tradeDto) {
+    public String addTrade(TradeDto tradeDto) {
         log.debug("GET : /trade/add");
         return "trade/add";
     }
