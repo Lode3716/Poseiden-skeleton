@@ -96,7 +96,7 @@ public class RuleNameServiceTest {
 
         RuleNameDto asSave = ruleNameService.save(ruleNameDto);
 
-        assertThat(asSave).isEqualToComparingFieldByField(ruleNameDto1);
+        assertThat(asSave).isEqualTo(ruleNameDto1);
         InOrder inOrder = inOrder(ruleNameUnJMapper, ruleNameRepository, ruleNameJMapper);
         inOrder.verify(ruleNameUnJMapper).getDestination(any(RuleNameDto.class));
         inOrder.verify(ruleNameRepository).save(any(RuleName.class));

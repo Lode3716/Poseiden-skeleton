@@ -6,6 +6,7 @@ import com.nnk.springboot.dto.BidListDto;
 import com.nnk.springboot.repositories.BidListRepository;
 import com.nnk.springboot.services.exceptions.BidListNotFoundException;
 import lombok.extern.java.Log;
+import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,7 +25,7 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.when;
 
-@Log
+@Log4j2
 @ExtendWith(MockitoExtension.class)
 public class BidListServiceTest {
 
@@ -96,7 +97,7 @@ public class BidListServiceTest {
 
         BidListDto asSave = bidListService.save(bidListDto);
 
-        assertThat(asSave).isEqualToComparingFieldByField(bidListDto1);
+        assertThat(asSave).isEqualTo(bidListDto1);
         InOrder inOrder = inOrder(bidListUnJMapper, bidListRepository, bidListJMapper);
         inOrder.verify(bidListUnJMapper).getDestination(any(BidListDto.class));
         inOrder.verify(bidListRepository).save(any(BidList.class));

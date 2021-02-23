@@ -93,7 +93,7 @@ public class CurveServiceTest {
 
         CurvePointDto asSave = curveService.save(curvePointDto);
 
-        assertThat(asSave).isEqualToComparingFieldByField(curvePointDto1);
+        assertThat(asSave).isEqualTo(curvePointDto1);
         InOrder inOrder = inOrder(curvePointUnJMapper, curvePointRepository, curvePointJMapper);
         inOrder.verify(curvePointUnJMapper).getDestination(any(CurvePointDto.class));
         inOrder.verify(curvePointRepository).save(any(CurvePoint.class));
@@ -135,10 +135,9 @@ public class CurveServiceTest {
         Assertions.assertThrows(CurvePointNotFoundException.class, () -> curveService.delete(anyInt()));
     }
 
-    @Test
+
     public void givenIdPointDto_whenFoundCurvePoint_thenReturnCurvePointFound() {
         CurvePoint curvePointFind = new CurvePoint(1, 1, null, 10d, 101d, Timestamp.from(Instant.ofEpochSecond(System.currentTimeMillis())));
-        ;
 
         when(curvePointRepository.findById(anyInt())).thenReturn(java.util.Optional.of(curvePointFind));
 

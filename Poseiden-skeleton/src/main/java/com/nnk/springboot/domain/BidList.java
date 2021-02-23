@@ -34,7 +34,6 @@ public class BidList implements Serializable {
     @Setter
     @PositiveOrZero
     @NotNull
-    //@Pattern(regexp = "^0$|^[1-9]\\d*$|^\\.\\d+$|^0\\.\\d*$|^[1-9]\\d*\\.\\d*$")
     private Double bidQuantity;
 
     private Double askQuantity;
@@ -74,6 +73,13 @@ public class BidList implements Serializable {
     private String side;
 
     public BidList(@NotNull(message = "Account is mandatory") String account, @NotNull(message = "Type is mandatory") String type, Double bidQuantity) {
+        this.account = account;
+        this.type = type;
+        this.bidQuantity = bidQuantity;
+    }
+
+    public BidList(Integer bidListId, @NotNull(message = "Account is mandatory") String account, @NotNull(message = "Type is mandatory") String type, @PositiveOrZero @NotNull Double bidQuantity) {
+        this.bidListId = bidListId;
         this.account = account;
         this.type = type;
         this.bidQuantity = bidQuantity;
