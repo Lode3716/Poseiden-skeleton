@@ -1,17 +1,18 @@
 package com.nnk.springboot.config.jwt;
 
-import com.nnk.springboot.config.services.UserDetailsImpl;
 import io.jsonwebtoken.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @Log4j2
 @Component
-public class JwtUtils {
+public class JwtUtils implements Serializable {
 
     @Value("${poseiden.app.jwtSecret}")
     private String jwtSecret;
@@ -19,9 +20,15 @@ public class JwtUtils {
     @Value("${poseiden.app.jwtExpirationMs}")
     private int jwtExpirationMs;
 
+
+    /**
+     * Generate token for user
+     * @param authentication
+     * @return token
+     */
     public String generateJwtToken(Authentication authentication) {
 
-        UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
+        UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
 
         return Jwts.builder()
                 .setSubject((userPrincipal.getUsername()))
@@ -31,6 +38,11 @@ public class JwtUtils {
                 .compact();
     }
 
+    /**
+     * Retrieve username from token
+     * @param token
+     * @return token name
+     */
     public String getUserNameFromJwtToken(String token) {
         return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
     }

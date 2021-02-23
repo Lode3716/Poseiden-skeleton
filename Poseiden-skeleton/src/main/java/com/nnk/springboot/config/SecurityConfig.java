@@ -2,7 +2,7 @@ package com.nnk.springboot.config;
 
 import com.nnk.springboot.config.jwt.AuthEntryPointJwt;
 import com.nnk.springboot.config.jwt.AuthTokenFilter;
-import com.nnk.springboot.config.services.UserDetailsServiceImpl;
+import com.nnk.springboot.services.UserDetailsServiceImpl;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -32,10 +31,6 @@ import java.io.IOException;
 @Log4j2
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(
-        // securedEnabled = true,
-        // jsr250Enabled = true,
-        prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -67,7 +62,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable()
+        http.csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/bidList/**", "/rating/**", "/ruleName/**", "/trade/**", "/curvePoint/**")
                 .authenticated()
@@ -77,7 +72,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
                 .and().exceptionHandling().accessDeniedHandler(this::accessDeniedHandler);
-        //.anyRequest().authenticated();
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }
@@ -100,7 +94,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     /**
-     * Handles logout success.
+     * Logout success.
      *
      * @param response       HttpServletResponse object
      * @param request        HttpServletRequest object
@@ -108,7 +102,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     private void logoutSuccessHandler(final HttpServletRequest request, final HttpServletResponse response,
                                       final Authentication authentication) throws IOException {
-        log.debug("Inside SecurityConfiguration's logoutSuccessHandler method");
 
         // Retrieves the current cookie
         Cookie cookie = WebUtils.getCookie(request, "Token");
@@ -125,80 +118,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
 }
-  /*
-  Deuxième configuration
-
-
-    private AccessDeniedHandler accessDeniedHandler;
-
-
-    private DataSource dataSource;
-
-
-
-    public void configure(final AuthenticationManagerBuilder auth) throws Exception {
-        auth.jdbcAuthentication()
-                .passwordEncoder(passwordEncoder())
-                .dataSource(dataSource)
-                .usersByUsernameQuery("select username,password,'true' as enabled  from users where username=?")
-                .authoritiesByUsernameQuery("select username, role from users where username=?");
-    }
-
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http
-                .authorizeRequests()
-                .antMatchers("/bidList/**", "/rating/**", "/ruleName/**", "/trade/**", "/curvePoint/**")
-                .authenticated()
-                .antMatchers("/user/**", "/admin/**").hasAuthority("ADMIN")
-                .anyRequest().authenticated()
-                .and()
-                .formLogin()
-                .permitAll()
-                .defaultSuccessUrl("/bidList/list")
-                .and()
-                .logout()
-                .permitAll()
-                .and()
-                .exceptionHandling().accessDeniedHandler(accessDeniedHandler);
-    }
-
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-*/
-    /*
-    Première configuration
-    @Autowired
-    private AccessDeniedHandler accessDeniedHandler;
-
-    public void globalConfig(AuthenticationManagerBuilder auth, DataSource dataSource) throws Exception {
-        auth.jdbcAuthentication()
-                .dataSource(dataSource)
-                .usersByUsernameQuery("select username as principal, password as credentials from users where username =?")
-                .authoritiesByUsernameQuery("select username as principal, role as role from users where username =?")
-                .rolePrefix("ROLE_");
-    }
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http
-                .authorizeRequests()
-                .antMatchers("/ruleName/**","/rating/**","/curvePoint/**","/bidList/**","/user/**","/css/**","/js/**").permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .formLogin()
-                .permitAll()
-                .defaultSuccessUrl("/bidList/list")
-        .and()
-        .logout()
-        .permitAll()
-        .and()
-        .exceptionHandling().accessDeniedHandler(accessDeniedHandler);
-    }
-*/
-
 
