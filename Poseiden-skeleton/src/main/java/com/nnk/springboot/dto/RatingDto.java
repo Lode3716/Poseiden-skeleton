@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -15,8 +17,11 @@ import lombok.Setter;
 public class RatingDto {
 
     Integer id;
+    @NotBlank(message = "Moodys is mandatory")
     String moodysRating;
+    @NotBlank(message = "Sand is mandatory")
     String sandPRating;
+    @NotBlank(message = "Fitch is mandatory")
     String fitchRating;
     Integer orderNumber;
 
