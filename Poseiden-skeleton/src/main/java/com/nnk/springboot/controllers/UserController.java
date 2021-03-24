@@ -46,7 +46,6 @@ public class UserController {
             model.addAttribute("users", userService.readAll());
                 return "redirect:/user/list";
             } catch (UserExistException userExistException) {
-                log.info("Dans erruer -----------------------------");
                 result.getFieldError("Pas good");
                 result.hasErrors();
                 return "user/add";

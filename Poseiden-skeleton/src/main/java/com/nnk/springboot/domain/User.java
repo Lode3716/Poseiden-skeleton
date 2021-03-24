@@ -18,7 +18,7 @@ import java.io.Serializable;
 public class User implements Serializable {
     @Id
     @Setter
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
 
     @Setter

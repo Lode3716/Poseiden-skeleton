@@ -64,7 +64,6 @@ public class LoginController {
      */
     @PostMapping("/signin")
     public String authentifictaionUser(@Valid final LoginDto loginDto, final BindingResult result,HttpServletResponse response) {
-        log.info("PASSE");
 
         if (result.hasErrors()) {
             log.error("Error(s): {}", result);
@@ -75,9 +74,6 @@ public class LoginController {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
-
-        log.info("JWT controller :"+jwt);
-
 
         // Creates a cookie and secures it
         Cookie cookie = new Cookie("Token",jwt);
