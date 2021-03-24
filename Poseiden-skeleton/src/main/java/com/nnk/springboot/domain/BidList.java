@@ -20,7 +20,7 @@ public class BidList implements Serializable {
     @Id
     @Column(name = "bidListId")
     @Setter
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer bidListId;
 
     @Setter

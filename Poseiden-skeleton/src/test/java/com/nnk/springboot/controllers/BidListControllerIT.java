@@ -6,7 +6,6 @@ import com.nnk.springboot.repositories.BidListRepository;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +50,6 @@ class BidListControllerIT {
     }
 
     @Test
-    @Order(1)
     @DisplayName("Given a BidListDto, when POST request, then save BidListDto check redirect Url is OK and check BidListDto is save in BDD")
     public void givenBidListDtoAdd_whenPostRequest_thenReturnBidListDtoAdd() throws Exception {
         BidListDto bidListDto = new BidListDto("Nouvelaccounta", "NouveauType", 10d);
@@ -71,6 +69,17 @@ class BidListControllerIT {
                 .anyMatch(bid -> bid.getAccount().equals(bidList.getAccount())
                         && bid.getType().equals(bidList.getType())
                         && bid.getBidQuantity().equals(bidList.getBidQuantity())));
+
+        repository.findAll().stream()
+                .findFirst()
+                .ifPresent(bid -> {
+                    if(bid.getAccount().equals(bidList.getAccount())
+                        && bid.getType().equals(bidList.getType())
+                        && bid.getBidQuantity().equals(bidList.getBidQuantity()))
+                    {
+                        repository.deleteById(bid.getBidListId());
+                    }
+                });
     }
 
     @Test
@@ -92,14 +101,14 @@ class BidListControllerIT {
     }
 
     @Test
-    @Order(2)
     @DisplayName("Given id BidList and biList to update, when post request, then update Bidlit in BDD")
     public void givenBidListDtoUpdate_whenUpdateRequest_deleteIsOk() throws Exception {
         BidListDto updateBidListDto = new BidListDto("NouvelaccountaUpdate", "NouveauTypeUpdate", 10d);
         BidList bidList = new BidList("Nouvelaccounta", "NouveauType", 10d);
         BidList updateBidList = new BidList("NouvelaccountaUpdate", "NouveauTypeUpdate", 10d);
 
-        String url= "/bidList/update/".concat(String.valueOf(searchId(bidList)));
+        BidList save=repository.save(bidList);
+        String url= "/bidList/update/".concat(String.valueOf(save.getBidListId()));
 
         mvc.perform(MockMvcRequestBuilders.post(url)
                 .sessionAttr("BidListDto", updateBidListDto)
@@ -109,24 +118,33 @@ class BidListControllerIT {
                 .andExpect(model().hasNoErrors())
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/bidList/list"));
 
-        assumeTrue(repository.existsById(searchId(updateBidList)));
+        repository.findById(save.getBidListId())
+                .ifPresent(bid->
+                {
+                    assumeTrue (bid.getAccount().equals(updateBidList.getAccount())
+                        && bid.getType().equals(updateBidList.getType())
+                        && bid.getBidQuantity().equals(updateBidList.getBidQuantity()));
+
+                }
+        );
+        repository.deleteById(save.getBidListId());
     }
 
     @Test
-    @Order(3)
     @DisplayName("Given id BidList, when DELETE request, then DELETE in BDD")
     public void givenBidListDtoDelete_whenDeleteRequest_deleteIsOk() throws Exception {
-        BidList bidList = new BidList("NouvelaccountaUpdate", "NouveauTypeUpdate", 10d);
-        String url= "/bidList/delete/".concat(String.valueOf(searchId(bidList)));
+        BidList bidList = new BidList("NouvelaccountaUpdateDelete", "NouveauTypeUpdateDelete", 10d);
+        BidList save=repository.save(bidList);
+        log.info("Create test : "+save.getBidListId());
+        String url= "/bidList/delete/".concat(String.valueOf(save.getBidListId()));
 
         mvc.perform(MockMvcRequestBuilders.get(url))
                 .andExpect(redirectedUrl("/bidList/list"));
-        assumeFalse(repository.existsById(searchId(bidList)));
+        assumeFalse(repository.existsById(save.getBidListId()));
     }
 
 
     @Test
-    @Order(4)
     @DisplayName("Count number BidList in Bdd and check number is the same in request")
     public void readAllBidList_thenShowBidListList() throws Exception {
       int nbBidList= (int) repository.findAll().stream().count();
@@ -144,24 +162,5 @@ class BidListControllerIT {
                 atomicInteger.set(modelBidList.size());
             }});
         assumeTrue(nbBidList == atomicInteger.get());
-    }
-
-
-    private Integer searchId(BidList bidList)
-    {
-        AtomicInteger atomicInteger=new AtomicInteger();
-        repository.findAll().stream()
-                .filter(bid -> {
-                    if (bid.getAccount().equals(bidList.getAccount())
-                            && bid.getType().equals(bidList.getType())
-                            && bid.getBidQuantity().equals(bidList.getBidQuantity())) {
-                        atomicInteger.set(bid.getBidListId());
-                        log.info("Check id : " + bid.getBidListId());
-                        return true;
-                    }
-                    return false;
-                }).findAny();
-
-        return atomicInteger.get();
     }
 }
