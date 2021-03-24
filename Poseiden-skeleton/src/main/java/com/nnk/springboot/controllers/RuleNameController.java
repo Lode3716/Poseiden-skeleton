@@ -23,7 +23,7 @@ public class RuleNameController {
     private IRuleNameService ruleNameService;
 
     /**
-     * Send RatringDto list.
+     * Send RatingDto list.
      *
      * @param model
      * @return The URI to the ruleName/list

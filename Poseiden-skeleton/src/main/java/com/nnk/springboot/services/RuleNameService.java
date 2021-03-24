@@ -37,8 +37,9 @@ public class RuleNameService implements IRuleNameService {
      */
     @Override
     public RuleNameDto save(RuleNameDto ruleNameDto) {
-        RuleName test=ruleNameUnJMapper.getDestination(ruleNameDto);
-        RuleName rl = ruleNameRepository.save(test);
+        log.info(ruleNameDto);
+        RuleName rule=ruleNameUnJMapper.getDestination(ruleNameDto);
+        RuleName rl = ruleNameRepository.save(rule);
         log.debug("Service : RuleName is save in Bdd : {} ", rl);
         return ruleNameJMapper.getDestination(rl);
     }
