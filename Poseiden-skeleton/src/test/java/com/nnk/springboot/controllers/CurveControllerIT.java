@@ -52,11 +52,10 @@ public class CurveControllerIT {
     }
 
     @Test
-    @Order(1)
     @DisplayName("Given a CurvePointDto, when POST request, then save CurvePointDto check redirect Url is OK and check CurvePointDto is save in BDD")
     public void givenCurvePointDtoAdd_whenPostRequest_thenReturnCurvePointDtoAdd() throws Exception {
         CurvePointDto curvePointDto = new CurvePointDto(1, 10d, 101d);
-        CurvePoint curvePoint = new CurvePoint( 1, null, 10d, 101d, Timestamp.from(Instant.ofEpochSecond(System.currentTimeMillis())));
+        CurvePoint curvePoint = new CurvePoint( 1, null, 10d, 101d, null);
 
         mvc.perform(MockMvcRequestBuilders.post("/curvePoint/validate")
                 .sessionAttr("CurvePointDto", curvePointDto)
@@ -68,19 +67,34 @@ public class CurveControllerIT {
 
 
         assumeTrue(repository.findAll().stream()
-                .anyMatch(curve -> curve.getCurveId() == curvePoint.getCurveId()
-                        && curve.getTerm() == curvePoint.getTerm()
-                        && curve.getValue() == curvePoint.getValue()));
+                .anyMatch(curve -> String.valueOf(curve.getCurveId()).equals(String.valueOf(curvePoint.getCurveId()))
+                        && String.valueOf(curve.getTerm()).equals(String.valueOf(curvePoint.getTerm()))
+                        && String.valueOf(curve.getValue()).equals(String.valueOf(curvePoint.getValue()))));
+
+        repository.findAll().stream()
+                .findFirst()
+                .ifPresent(curve -> {
+                    if (String.valueOf(curve.getCurveId()).equals(String.valueOf(curvePoint.getCurveId()))
+                            && String.valueOf(curve.getTerm()).equals(String.valueOf(curvePoint.getTerm()))
+                            && String.valueOf(curve.getValue()).equals(String.valueOf(curvePoint.getValue()))) {
+                        log.info("Check id : " + curve.getId());
+                        repository.deleteById(curve.getId());
+                    }
+
+                });
+
+
     }
+
 
     @Test
     @DisplayName("Given a CurvePointDto, when POST request, then save CurvePointDto return error Account is mandatory")
     public void givenCurvePointDtoAdd_whenPostRequest_thenReturnErreurMandatory() throws Exception {
-        CurvePointDto curvePointDto = new CurvePointDto(null, 10d, 101d);
+        CurvePointDto curvePointDto = new CurvePointDto(null, 1023d, 101d);
 
         MvcResult result = mvc.perform(MockMvcRequestBuilders.post("/curvePoint/validate")
                 .sessionAttr("CurvePointDto", curvePointDto)
-                .param("curveId", curvePointDto.getCurveId().toString())
+                .param("curveId", "")
                 .param("term", curvePointDto.getTerm().toString())
                 .param("value", curvePointDto.getValue().toString()))
                 .andExpect(model().hasErrors())
@@ -93,15 +107,15 @@ public class CurveControllerIT {
     }
 
     @Test
-    @Order(2)
     @DisplayName("Given id CurvePoint and biList to update, when post request, then update CurvePoint in BDD")
     public void givenCurvePointDtoUpdate_whenUpdateRequest_deleteIsOk() throws Exception {
         CurvePointDto upDateurvePointDto = new CurvePointDto(25, 10d, 1001d);
-        CurvePoint curvePoint = new CurvePoint( 1, null, 10d, 101d, Timestamp.from(Instant.ofEpochSecond(System.currentTimeMillis())));
-        CurvePoint updateCurvePoint = new CurvePoint( 25, null, 10d, 1001d, Timestamp.from(Instant.ofEpochSecond(System.currentTimeMillis())));
+        CurvePoint curvePoint = new CurvePoint( 1, null, 10d, 101d, null);
+        CurvePoint updateCurvePoint = new CurvePoint( 25, null, 10d, 1001d, null);
 
+        CurvePoint save=repository.save(curvePoint);
 
-        String url = "/curvePoint/update/".concat(String.valueOf(searchId(curvePoint)));
+        String url = "/curvePoint/update/".concat(String.valueOf(save.getId()));
 
         mvc.perform(MockMvcRequestBuilders.post(url)
                 .sessionAttr("CurvePointDto", upDateurvePointDto)
@@ -111,25 +125,34 @@ public class CurveControllerIT {
                 .andExpect(model().hasNoErrors())
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/curvePoint/list"));
 
-        assumeTrue(repository.existsById(searchId(updateCurvePoint)));
+        repository.findById(save.getId())
+                .ifPresent(curvePoint1->
+        {
+            assumeTrue (String.valueOf(curvePoint1.getCurveId()).equals(String.valueOf(updateCurvePoint.getCurveId()))
+                    && String.valueOf(curvePoint1.getTerm()).equals(String.valueOf(updateCurvePoint.getTerm()))
+                    && String.valueOf(curvePoint1.getValue()).equals(String.valueOf(updateCurvePoint.getValue())));
+
+        });
+
+        repository.deleteById(save.getId());
     }
 
+
     @Test
-    @Order(3)
     @DisplayName("Given id CurvePoint, when DELETE request, then DELETE in BDD")
     public void givenCurvePointDtoDelete_whenDeleteRequest_deleteIsOk() throws Exception {
-        CurvePoint updateCurvePoint = new CurvePoint(25, null, 10d, 1001d, Timestamp.from(Instant.ofEpochSecond(System.currentTimeMillis())));
+        CurvePoint curvePoint = new CurvePoint(253, null, 1056d, 1001d, null);
 
-        String url = "/curvePoint/delete/".concat(String.valueOf(searchId(updateCurvePoint)));
+        CurvePoint save=repository.save(curvePoint);
+
+        String url = "/curvePoint/delete/".concat(String.valueOf(save.getId()));
 
         mvc.perform(MockMvcRequestBuilders.get(url))
                 .andExpect(redirectedUrl("/curvePoint/list"));
-        assumeFalse(repository.existsById(searchId(updateCurvePoint)));
+        assumeFalse(repository.existsById(save.getId()));
     }
 
-
     @Test
-    @Order(4)
     @DisplayName("Count number CurvePoint in Bdd and check number is the same in request")
     public void readAllCurvePoint_thenShowCurvePointList() throws Exception {
         int nbCurvPoint = (int) repository.findAll().stream().count();
@@ -151,20 +174,4 @@ public class CurveControllerIT {
         assumeTrue(nbCurvPoint == atomicInteger.get());
     }
 
-
-    private Integer searchId(CurvePoint curvePoint) {
-        AtomicInteger atomicInteger = new AtomicInteger();
-        repository.findAll().stream()
-                .filter(curve -> {
-                    if (curve.getCurveId() == curvePoint.getCurveId()
-                            && curve.getTerm() == curvePoint.getTerm()
-                            && curve.getValue() == curvePoint.getValue()) {
-                        log.info("Check id : " + curve.getId());
-                        return true;
-                    }
-                    return false;
-                }).findAny();
-
-        return atomicInteger.get();
-    }
 }
