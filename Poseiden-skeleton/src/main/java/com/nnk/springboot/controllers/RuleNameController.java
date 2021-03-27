@@ -80,7 +80,6 @@ public class RuleNameController {
         log.debug("GET : /ruleName/update/{}", id);
         RuleNameDto dto = ruleNameService.readByid(id);
         model.addAttribute("rule", dto);
-        log.info("GET : /ruleName/update/" + id + " - SUCCES");
         return "ruleName/update";
     }
 
@@ -88,7 +87,7 @@ public class RuleNameController {
      * RuleNameDto is update
      *
      * @param id
-     * @param ruleName
+     * @param ruleNameDto
      * @param result
      * @param model
      * @return The URI to the ruleName/update, if result has errors.
@@ -101,6 +100,7 @@ public class RuleNameController {
 
         if (result.hasErrors()) {
             log.info("POST : /ruleName/update/{} - ERROR", id);
+            model.addAttribute("rule", ruleNameDto);
             return "ruleName/update";
         }
         ruleNameService.update(id, ruleNameDto);

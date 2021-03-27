@@ -38,7 +38,7 @@ public class CurveController {
     /**
      * Send CurvePointDto to save.
      *
-     * @param curvePoint
+     * @param curvePointDto
      * @return The URI to the curvePoint/add
      */
     @GetMapping("/curvePoint/add")
@@ -50,7 +50,7 @@ public class CurveController {
     /**
      * Save a new CurvePointDto
      *
-     * @param curvePoint
+     * @param curvePointDto
      * @param result
      * @param model
      * @return The URI to the curvePoint/add if result has errors.
@@ -80,7 +80,6 @@ public class CurveController {
         log.debug("GET : /curvePoint/update/{}", id);
         CurvePointDto dto = curveService.readByid(id);
         model.addAttribute("curvePoint", dto);
-        log.info("GET : /curvePoint/update/" + id + " - SUCCES");
         return "curvePoint/update";
     }
 
@@ -88,7 +87,7 @@ public class CurveController {
      * CurveListDto is update
      *
      * @param id
-     * @param curvePoint
+     * @param curvePointDto
      * @param result
      * @param model
      * @return
@@ -100,6 +99,7 @@ public class CurveController {
 
         if (result.hasErrors()) {
             log.info("POST : /curvePoint/update/{} - ERROR", id);
+            model.addAttribute("curvePoint", curvePointDto);
             return "curvePoint/update";
         }
         curveService.update(id, curvePointDto);

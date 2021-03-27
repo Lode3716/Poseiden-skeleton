@@ -67,6 +67,7 @@ public class BidListController {
             model.addAttribute("bidLists", bidListService.readAll());
             return "redirect:/bidList/list";
         }
+        log.error("POST : /bidList/add - ERROR");
         return "bidList/add";
     }
 
@@ -82,7 +83,6 @@ public class BidListController {
         log.debug("GET : /bidList/update/{}", id);
         BidListDto dto = bidListService.readByid(id);
         model.addAttribute("bidList", dto);
-        log.info("GET : /bidList/update/" + id + " - SUCCES");
         return "bidList/update";
     }
 
@@ -100,9 +100,9 @@ public class BidListController {
     public String updateBid(@PathVariable("id") Integer id, @Valid BidListDto bidListDto,
                             BindingResult result, Model model) {
         log.debug("POST : /bidList/update/{}", id);
-
-        if (result.hasErrors()) {
-            log.info("POST : /bidList/update/{} - ERROR", id);
+        if (!result.hasErrors()) {
+            log.error("POST : /bidList/update/{} - ERROR", id);
+            model.addAttribute("bidList", bidListDto);
             return "bidList/update";
         }
         bidListService.update(id, bidListDto);

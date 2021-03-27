@@ -53,7 +53,7 @@ public class RatingController {
     /**
      * Save a new ratingDto
      *
-     * @param rating
+     * @param ratingDto
      * @param result
      * @param model
      * @returnThe URI to the rating/add if result has errors.
@@ -83,7 +83,6 @@ public class RatingController {
         log.debug("GET : /rating/update/{}", id);
         RatingDto dto = ratingService.readByid(id);
         model.addAttribute("rating", dto);
-        log.info("GET : /rating/update/" + id + " - SUCCES");
         return "rating/update";
     }
 
@@ -104,7 +103,8 @@ public class RatingController {
         log.debug("POST : /rating/update/{}", id);
 
         if (result.hasErrors()) {
-            log.info("POST : /rating/update/{} - ERROR", id);
+            log.error("POST : /rating/update/{} - ERROR", id);
+            model.addAttribute("rating", ratingDto);
             return "rating/update";
         }
         ratingService.update(id, ratingDto);

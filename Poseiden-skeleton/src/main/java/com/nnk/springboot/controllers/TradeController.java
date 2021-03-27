@@ -81,7 +81,6 @@ public class TradeController {
         log.debug("GET : /trade/update/{}", id);
         TradeDto dto = tradeService.readByid(id);
         model.addAttribute("trade", dto);
-        log.info("GET : /trade/update/" + id + " - SUCCES");
         return "trade/update";
     }
 
@@ -102,6 +101,7 @@ public class TradeController {
 
         if (result.hasErrors()) {
             log.info("POST : /trade/update/{} - ERROR", id);
+            model.addAttribute("trade", tradeDto);
             return "trade/update";
         }
         tradeService.update(id, tradeDto);
