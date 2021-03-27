@@ -41,18 +41,15 @@ public class UserController {
         log.debug("POST : /user/validate");
         if (!result.hasErrors()) {
             try {
-            userService.save(userDto);
-            log.info("POST : /user/add - SUCCES");
-            model.addAttribute("users", userService.readAll());
+                userService.save(userDto);
+                log.info("POST : /user/add - SUCCES");
+                model.addAttribute("users", userService.readAll());
                 return "redirect:/user/list";
             } catch (UserExistException userExistException) {
-                result.getFieldError("Pas good");
-                result.hasErrors();
+                model.addAttribute("userExit", userExistException.getMessage());
                 return "user/add";
             }
-            }
-
-
+        }
         return "user/add";
     }
 
@@ -68,15 +65,26 @@ public class UserController {
     public String updateUser(@PathVariable("id") Integer id, @Valid UserDto userDto,
                              BindingResult result, Model model) {
         log.debug("POST : /user/update/{}", id);
+        log.info("User dto  : "+userDto);
         if (result.hasErrors()) {
             log.info("POST : /user/update/{} - ERROR", id);
+            model.addAttribute("user", userDto);
             return "user/update";
         }
-        userService.update(id,userDto);
-        model.addAttribute("users", userService.readAll());
-        log.info("POST : /user/update/{} - SUCCESS", id);
-        return "redirect:/user/list";
+        try {
+            userService.update(id, userDto);
+            model.addAttribute("users", userService.readAll());
+            log.info("POST : /user/update/{} - SUCCESS", id);
+            return "redirect:/user/list";
+        } catch (UserExistException userExistException) {
+            log.error("Update user exist {}",userExistException.getMessage());
+            model.addAttribute("userExistUpdate", userExistException.getMessage());
+
+        }
+        model.addAttribute("user", userDto);
+        return "user/update";
     }
+
 
     @GetMapping("/user/delete/{id}")
     public String deleteUser(@PathVariable("id") Integer id, Model model) {

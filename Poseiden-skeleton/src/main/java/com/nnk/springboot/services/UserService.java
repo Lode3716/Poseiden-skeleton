@@ -30,14 +30,15 @@ public class UserService implements IUserService {
     /**
      * If username exist throw error
      * When it's recorded, we return here.
+     *
      * @param userDto
      * @return user create
      */
     @Override
     public UserDto save(UserDto userDto) {
         if (existsByUsername(userDto.getUsername())) {
-            log.error("This user name is already exiting : "+userDto.getUsername());
-            throw new UserExistException("This user name is already exiting");
+            log.error("This user name is already existing : " + userDto.getUsername());
+            throw new UserExistException("This user name is already existing");
         } else {
             User user = userUnJMapper.getDestination(userDto);
             return saveUser(user);
@@ -71,12 +72,32 @@ public class UserService implements IUserService {
     @Override
     public UserDto update(Integer id, UserDto userDto) {
         User updateUser = existById(userDto.getId());
+        if (updateUser.getUsername().equals(userDto.getUsername()) && updateUser.getId() == userDto.getId()) {
+            updateUser.setPassword(userDto.getPassword());
+            updateUser.setPassword(userDto.getUsername());
+            updateUser.setFullname(userDto.getFullname());
+            updateUser.setRole(userDto.getRole());
+            log.debug("Service : update user : {} ", updateUser.getId());
+            return saveUser(updateUser);
+        } else {
+            userRepository.findByUsername(userDto.getUsername())
+                    .ifPresent(user ->
+                    {
+                        if (user.getId() == updateUser.getId()) {
+
+                            log.info("Save update");
+                        } else {
+                            log.error("This user name is already existing : " + userDto.getUsername());
+                            throw new UserExistException("This user name is already existing");
+                        }
+                    });
+
+        }
         updateUser.setPassword(userDto.getPassword());
         updateUser.setPassword(userDto.getUsername());
         updateUser.setFullname(userDto.getFullname());
         updateUser.setRole(userDto.getRole());
-        log.debug("Service : update user : {} ", updateUser.getId());
-
+        log.debug("Service : update user  : {} ", updateUser.getId());
         return saveUser(updateUser);
     }
 
@@ -88,18 +109,19 @@ public class UserService implements IUserService {
     @Override
     public void delete(Integer id) {
         userRepository.deleteById(existById(id).getId());
-        log.info("Service delete User id : {}",id);
+        log.info("Service delete User id : {}", id);
     }
 
 
     /**
      * Find user By id
+     *
      * @param id
      * @return the userDto find or issue IllegalArgumentException
      */
     @Override
     public UserDto readByid(Integer id) {
-        User user=userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
+        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
         log.info("Service : Read by Id USER - SUCCESS");
         return userJMapper.getDestination(user);
     }
@@ -107,6 +129,7 @@ public class UserService implements IUserService {
 
     /**
      * Find user By id
+     *
      * @param id
      * @return the userDto find or issue UserNotFoundException
      */
@@ -118,6 +141,7 @@ public class UserService implements IUserService {
 
     /**
      * Find by username if exist return true
+     *
      * @param userName
      * @return true if exist
      */
@@ -127,17 +151,16 @@ public class UserService implements IUserService {
 
 
     /**
-     *  Crypt PassWord user and save it in the database.
-     *  Convert in UserDto
+     * Crypt PassWord user and save it in the database.
+     * Convert in UserDto
      *
      * @param user
      * @return userDto
      */
-    private UserDto saveUser(User user)
-    {
+    private UserDto saveUser(User user) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         user.setPassword(encoder.encode(user.getPassword()));
-        User retour=userRepository.save(user);
+        User retour = userRepository.save(user);
         log.info("Service : user is save in Bdd : {} ", user.getId());
         return userJMapper.getDestination(retour);
 

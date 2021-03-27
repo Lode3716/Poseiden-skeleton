@@ -13,7 +13,7 @@
 
 		</div>
 		<div class="col-6 text-right">
-			<a href="/">Home</a>| Logged in user: <b th:inline="text"  class="user"> [[${#httpServletRequest.remoteUser}]] </b>
+			<a href="/">Home</a> | Logged in user: <b th:inline="text"  class="user"> [[${#httpServletRequest.remoteUser}]] </b>
 				<form th:action="@{/logout}" method="POST">
 					<input type="submit" value="Logout"/>
 				</form>

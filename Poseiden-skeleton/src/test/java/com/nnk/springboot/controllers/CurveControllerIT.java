@@ -6,7 +6,6 @@ import com.nnk.springboot.repositories.CurvePointRepository;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +19,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -55,7 +52,7 @@ public class CurveControllerIT {
     @DisplayName("Given a CurvePointDto, when POST request, then save CurvePointDto check redirect Url is OK and check CurvePointDto is save in BDD")
     public void givenCurvePointDtoAdd_whenPostRequest_thenReturnCurvePointDtoAdd() throws Exception {
         CurvePointDto curvePointDto = new CurvePointDto(1, 10d, 101d);
-        CurvePoint curvePoint = new CurvePoint( 1, null, 10d, 101d, null);
+        CurvePoint curvePoint = new CurvePoint(1, null, 10d, 101d, null);
 
         mvc.perform(MockMvcRequestBuilders.post("/curvePoint/validate")
                 .sessionAttr("CurvePointDto", curvePointDto)
@@ -110,10 +107,10 @@ public class CurveControllerIT {
     @DisplayName("Given id CurvePoint and biList to update, when post request, then update CurvePoint in BDD")
     public void givenCurvePointDtoUpdate_whenUpdateRequest_deleteIsOk() throws Exception {
         CurvePointDto upDateurvePointDto = new CurvePointDto(25, 10d, 1001d);
-        CurvePoint curvePoint = new CurvePoint( 1, null, 10d, 101d, null);
-        CurvePoint updateCurvePoint = new CurvePoint( 25, null, 10d, 1001d, null);
+        CurvePoint curvePoint = new CurvePoint(1, null, 10d, 101d, null);
+        CurvePoint updateCurvePoint = new CurvePoint(25, null, 10d, 1001d, null);
 
-        CurvePoint save=repository.save(curvePoint);
+        CurvePoint save = repository.save(curvePoint);
 
         String url = "/curvePoint/update/".concat(String.valueOf(save.getId()));
 
@@ -126,13 +123,13 @@ public class CurveControllerIT {
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/curvePoint/list"));
 
         repository.findById(save.getId())
-                .ifPresent(curvePoint1->
-        {
-            assumeTrue (String.valueOf(curvePoint1.getCurveId()).equals(String.valueOf(updateCurvePoint.getCurveId()))
-                    && String.valueOf(curvePoint1.getTerm()).equals(String.valueOf(updateCurvePoint.getTerm()))
-                    && String.valueOf(curvePoint1.getValue()).equals(String.valueOf(updateCurvePoint.getValue())));
+                .ifPresent(curvePoint1 ->
+                {
+                    assumeTrue(String.valueOf(curvePoint1.getCurveId()).equals(String.valueOf(updateCurvePoint.getCurveId()))
+                            && String.valueOf(curvePoint1.getTerm()).equals(String.valueOf(updateCurvePoint.getTerm()))
+                            && String.valueOf(curvePoint1.getValue()).equals(String.valueOf(updateCurvePoint.getValue())));
 
-        });
+                });
 
         repository.deleteById(save.getId());
     }
@@ -143,7 +140,7 @@ public class CurveControllerIT {
     public void givenCurvePointDtoDelete_whenDeleteRequest_deleteIsOk() throws Exception {
         CurvePoint curvePoint = new CurvePoint(253, null, 1056d, 1001d, null);
 
-        CurvePoint save=repository.save(curvePoint);
+        CurvePoint save = repository.save(curvePoint);
 
         String url = "/curvePoint/delete/".concat(String.valueOf(save.getId()));
 
