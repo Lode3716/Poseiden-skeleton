@@ -11,7 +11,6 @@ public class ErrorController {
     @GetMapping("/403")
     public String showError403() {
         log.debug("GET Request on /403");
-
         return "/403";
     }
 }

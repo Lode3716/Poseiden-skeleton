@@ -32,13 +32,13 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             Optional.ofNullable(request.getCookies())
                     .ifPresent(cookies ->
                     {
-                        log.info("nOMBRE DE COOKIES : {}", Optional.ofNullable(cookies).isPresent());
+                        log.debug("Present cookies : {}", Optional.ofNullable(cookies).isPresent());
                         String jwt = cookies[0].getValue();
 
                         if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
                             String username = jwtUtils.getUserNameFromJwtToken(jwt);
 
-                            log.info("Username Token " + username);
+                            log.debug("Read cookies username : " + username);
                             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
                             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                                     userDetails, null, userDetails.getAuthorities());

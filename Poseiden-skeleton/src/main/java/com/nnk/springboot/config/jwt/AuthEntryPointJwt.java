@@ -25,8 +25,8 @@ public class AuthEntryPointJwt implements AuthenticationEntryPoint {
             // Redirects to login page with error message if bad credentials
             response.sendRedirect("/login?error");
         } else {
-            // Redirects to home page with error message if user is not authenticated
-            response.sendRedirect("/?error");
+            // Redirects to login page if user is not authenticated
+            response.sendRedirect("/login");
         }
     }
 }

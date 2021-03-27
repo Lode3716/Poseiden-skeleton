@@ -66,7 +66,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/bidList/**", "/rating/**", "/ruleName/**", "/trade/**", "/curvePoint/**")
                 .authenticated()
-                .antMatchers("/user/**", "/admin/**").hasAuthority("ADMIN")
+                .antMatchers("/user/**").hasAuthority("ADMIN")
                 .anyRequest().permitAll()
                 .and().logout().logoutSuccessHandler(this::logoutSuccessHandler).permitAll()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
