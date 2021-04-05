@@ -101,6 +101,25 @@ class BidListControllerIT {
     }
 
     @Test
+    @DisplayName("Given a BidListDto, when POST request, then update BidListDto return error Account is mandatory")
+    public void givenBidListDtoUpdate_whenUpdateRequest() throws Exception {
+        BidListDto updateBidListDto = new BidListDto("NouvelaccountaUpdate", "", 10d);
+        BidList bidList = new BidList("Nouvelaccounta", "typo", 10d);
+
+        BidList save=repository.save(bidList);
+        String url= "/bidList/update/".concat(String.valueOf(save.getBidListId()));
+
+       mvc.perform(MockMvcRequestBuilders.post(url)
+                .sessionAttr("BidListDto", updateBidListDto)
+                .param("account", updateBidListDto.getAccount())
+                .param("type", updateBidListDto.getType())
+                .param("bidQuantity", updateBidListDto.getBidQuantity().toString()))
+                .andExpect(model().hasErrors())
+                .andExpect(view().name("bidList/update"));
+
+    }
+
+    @Test
     @DisplayName("Given id BidList and biList to update, when post request, then update Bidlit in BDD")
     public void givenBidListDtoUpdate_whenUpdateRequest_deleteIsOk() throws Exception {
         BidListDto updateBidListDto = new BidListDto("NouvelaccountaUpdate", "NouveauTypeUpdate", 10d);

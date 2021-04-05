@@ -53,8 +53,8 @@ class UserControllerIT {
     @Test
     @DisplayName("Given a UserDto, when POST request, then save UserDto check redirect Url is OK and check UserDto is save in BDD")
     public void givenUserDtoAdd_whenPostRequest_thenReturnUserDtoAdd() throws Exception {
-        UserDto userDto = new UserDto("Jack", "USER","Ursul1pm*", "Jack" );
-        User user = new User("Jack", "Ursul1pm*", "Jack", "USER");
+        UserDto userDto = new UserDto("Marco", "USER","Ursul1pm*", "Marco" );
+        User user = new User("Marco", "Ursul1pm*", "Marco", "USER");
 
         mvc.perform(MockMvcRequestBuilders.post("/user/validate")
                 .sessionAttr("UserDto", userDto)
@@ -111,7 +111,7 @@ class UserControllerIT {
 
         String url = "/user/update/".concat(String.valueOf(save.getId()));
 
-        log.info("Url update User : {}", url);
+        log.debug("Url update User : {}", url);
 
         mvc.perform(MockMvcRequestBuilders.post(url)
                 .sessionAttr("UserDto", updateUserDto)
@@ -162,7 +162,7 @@ class UserControllerIT {
                         atomicInteger.set(modelUsers.size());
                     }
                 });
-        log.info("nombre  = " + nbUser + " /  retour :  " + atomicInteger.get());
+        log.debug("nombre  = " + nbUser + " /  retour :  " + atomicInteger.get());
         assumeTrue(nbUser == atomicInteger.get());
     }
 
