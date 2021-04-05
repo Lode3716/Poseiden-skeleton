@@ -24,16 +24,12 @@ public class BidList implements Serializable {
     private Integer bidListId;
 
     @Setter
-    @NotNull(message = "Account is mandatory")
     private String account;
 
     @Setter
-    @NotNull(message = "Type is mandatory")
     private String type;
 
     @Setter
-    @PositiveOrZero
-    @NotNull
     private Double bidQuantity;
 
     private Double askQuantity;

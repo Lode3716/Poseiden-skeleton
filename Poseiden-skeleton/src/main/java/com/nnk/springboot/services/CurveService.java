@@ -30,13 +30,13 @@ public class CurveService implements ICurveService {
      * Convert a CurvePointDto to CurvePoint and save it in the database.
      * When it's recorded, we return here.
      *
-     * @param bidListDto to save
+     * @param curvePointDto to save
      * @return the CurvePoint saved and converted the CurvePointDto
      */
     @Override
     public CurvePointDto save(CurvePointDto curvePointDto) {
         CurvePoint curvePoint = curvePointRepository.save(curvePointUnJMapper.getDestination(curvePointDto));
-        log.debug("Service : CurvePoint is save in Bdd : {} ", curvePoint.getCurveId());
+        log.info("Service : CurvePoint is save in Bdd : {} ", curvePoint.getCurveId());
         return curvePointJMapper.getDestination(curvePoint);
     }
 
@@ -54,7 +54,7 @@ public class CurveService implements ICurveService {
                 {
                     dtoList.add(curvePointJMapper.getDestination(curvePoint));
                 });
-        log.debug("Service : create list curvePointDto : {} ", dtoList.size());
+        log.debug("Service : read list curvePointDto : {} ", dtoList.size());
         return dtoList;
     }
 
@@ -71,7 +71,7 @@ public class CurveService implements ICurveService {
         updateCurvePoint.setCurveId(curvePointDto.getCurveId());
         updateCurvePoint.setTerm(curvePointDto.getTerm());
         updateCurvePoint.setValue(curvePointDto.getValue());
-        log.debug("Service : update list curvePointDto : {} ", updateCurvePoint.getId());
+        log.info("Service : update in bdd curvePointDto : {} ", updateCurvePoint.getId());
         return curvePointJMapper.getDestination(curvePointRepository.save(updateCurvePoint));
     }
 
@@ -83,7 +83,7 @@ public class CurveService implements ICurveService {
     @Override
     public void delete(Integer id) {
         curvePointRepository.deleteById(existById(id).getId());
-        log.debug("Service : delete curvePointDto : {} ", id);
+        log.info("Service : delete curvePointDto : {} ", id);
     }
 
     /**

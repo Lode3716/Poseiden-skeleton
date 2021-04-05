@@ -133,6 +133,7 @@ public class UserService implements IUserService {
      * @param id
      * @return the userDto find or issue UserNotFoundException
      */
+    @Override
     public User existById(Integer id) {
         return userRepository
                 .findById(id)
@@ -145,6 +146,7 @@ public class UserService implements IUserService {
      * @param userName
      * @return true if exist
      */
+    @Override
     public boolean existsByUsername(String userName) {
         return userRepository.existsByUsername(userName);
     }

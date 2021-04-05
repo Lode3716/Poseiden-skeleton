@@ -28,7 +28,6 @@ public class RuleNameService implements IRuleNameService {
 
 
     /**
-     *
      * Convert a RuleNameDto to RuleName and save it in the database.
      * When it's recorded, we return here.
      *
@@ -38,9 +37,9 @@ public class RuleNameService implements IRuleNameService {
     @Override
     public RuleNameDto save(RuleNameDto ruleNameDto) {
         log.info(ruleNameDto);
-        RuleName rule=ruleNameUnJMapper.getDestination(ruleNameDto);
+        RuleName rule = ruleNameUnJMapper.getDestination(ruleNameDto);
         RuleName rl = ruleNameRepository.save(rule);
-        log.debug("Service : RuleName is save in Bdd : {} ", rl);
+        log.info("Service : RuleName is save in Bdd : {} ", rl.getId());
         return ruleNameJMapper.getDestination(rl);
     }
 
@@ -58,7 +57,7 @@ public class RuleNameService implements IRuleNameService {
                 {
                     ruleNameDtoList.add(ruleNameJMapper.getDestination(ruleName));
                 });
-        log.debug("Service : create list RuleNameDto : {} ", ruleNameDtoList.size());
+        log.debug("Service : read list RuleNameDto : {} ", ruleNameDtoList.size());
 
         return ruleNameDtoList;
     }
@@ -71,8 +70,7 @@ public class RuleNameService implements IRuleNameService {
      * @return the RuleName update and converted the RuleNameDto
      */
     @Override
-    public RuleNameDto update(Integer id,RuleNameDto ruleNameDto) {
-        log.info("Affiche : {}",ruleNameDto);
+    public RuleNameDto update(Integer id, RuleNameDto ruleNameDto) {
         RuleName updateRuleName = existById(id);
         updateRuleName.setName(ruleNameDto.getName());
         updateRuleName.setDescription(ruleNameDto.getDescription());
@@ -80,7 +78,7 @@ public class RuleNameService implements IRuleNameService {
         updateRuleName.setSqlPart(ruleNameDto.getSqlPart());
         updateRuleName.setSqlStr(ruleNameDto.getSqlStr());
         updateRuleName.setTemplate(ruleNameDto.getTemplate());
-        log.debug("Service : update ruleName : {} ", updateRuleName.getId());
+        log.info("Service : update ruleName : {} ", updateRuleName.getId());
         return ruleNameJMapper.getDestination(ruleNameRepository.save(updateRuleName));
     }
 
@@ -92,23 +90,25 @@ public class RuleNameService implements IRuleNameService {
     @Override
     public void delete(Integer id) {
         ruleNameRepository.deleteById(existById(id).getId());
-        log.info("Service delete ruleName id : {}",id);
+        log.info("Service delete ruleName id : {}", id);
     }
 
     /**
      * Find Rule  By id
+     *
      * @param id
      * @return the RuleNameDto find or issue IllegalArgumentException
      */
     @Override
     public RuleNameDto readByid(Integer id) {
-        RuleName findRuleNameId= ruleNameRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid ruleName Id:" + id));
-        log.info("Service : Read by Id ruleName - SUCCESS");
+        RuleName findRuleNameId = ruleNameRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid ruleName Id:" + id));
+        log.debug("Service : Read by Id ruleName : {}", id);
         return ruleNameJMapper.getDestination(findRuleNameId);
     }
 
     /**
      * Find RuleName By id
+     *
      * @param id
      * @return the RuleName find or issue RuleNameNotFoundException
      */

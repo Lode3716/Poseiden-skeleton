@@ -60,7 +60,6 @@ public class LoginController {
             return "redirect:/bidList/list";
         }
 
-        log.info("GET Request on /login - SUCCESS");
         return "/login";
 
     }
@@ -76,7 +75,7 @@ public class LoginController {
     @PostMapping("/signin")
     public String authentifictaionUser(@Valid final LoginDto loginDto, final BindingResult result, HttpServletResponse response) {
 
-        log.info("Authentification");
+        log.debug ("POST  : /signin : {}", loginDto.getUsername());
         if (result.hasErrors()) {
             log.error("Post : Authentification error(s): {}", result);
             return "/login";
@@ -94,7 +93,7 @@ public class LoginController {
         cookie.setMaxAge(cookieExpirationSec);
         response.addCookie(cookie);
 
-        log.info("Post , succes authentification");
+        log.info("Connect with username : {}",loginDto.getUsername());
         return "redirect:/bidList/list";
 
     }

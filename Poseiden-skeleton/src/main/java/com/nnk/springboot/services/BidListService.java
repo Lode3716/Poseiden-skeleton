@@ -53,7 +53,7 @@ public class BidListService implements IBidListService {
                 {
                     listBidListDto.add(bidListJMapper.getDestination(bidList));
                 });
-        log.debug("Service : create list BidLIST : {} ", listBidListDto.size());
+        log.debug("Service : read list BidLIST : {} ", listBidListDto.size());
         return listBidListDto;
     }
 
@@ -71,7 +71,7 @@ public class BidListService implements IBidListService {
         updateBidList.setAccount(bidListDto.getAccount());
         updateBidList.setType(bidListDto.getType());
         updateBidList.setBidQuantity(bidListDto.getBidQuantity());
-        log.debug("Service : update list updateBidList : {} ", updateBidList.getBidListId());
+        log.info("Service : update BidList : {} ", updateBidList.getBidListId());
         return bidListJMapper.getDestination(bidListRepository.save(updateBidList));
     }
 
@@ -83,7 +83,7 @@ public class BidListService implements IBidListService {
     @Override
     public void delete(Integer id) {
         bidListRepository.deleteById(existById(id).getBidListId());
-        log.info("Service delete bidList id : {}",id);
+        log.info("Service : delete bidList id : {}",id);
     }
 
     /**

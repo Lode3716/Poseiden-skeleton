@@ -36,7 +36,7 @@ public class RatingService implements IRatingService {
     @Override
     public RatingDto save(RatingDto ratingDto) {
         Rating rt = ratingRepository.save(ratingUnJMapper.getDestination(ratingDto));
-        log.debug("Service : Rating is save in Bdd : {} ", rt);
+        log.info("Service : Rating is save in Bdd : {} ", rt);
         return ratingJMapper.getDestination(rt);
     }
 
@@ -50,7 +50,7 @@ public class RatingService implements IRatingService {
         List<RatingDto> listRatin = new ArrayList<>();
         ratingRepository.findAll()
                 .forEach(rating -> listRatin.add(ratingJMapper.getDestination(rating)));
-        log.debug("Service : create list ratingDto : {} ", listRatin.size());
+        log.debug("Service : read list ratingDto : {} ", listRatin.size());
         return listRatin;
     }
 
@@ -67,7 +67,7 @@ public class RatingService implements IRatingService {
         updateRating.setMoodysRating(rtDto.getMoodysRating());
         updateRating.setSandPRating(rtDto.getSandPRating());
         updateRating.setOrderNumber(rtDto.getOrderNumber());
-        log.debug("Service : update rating: {} ", updateRating.getId());
+        log.info("Service : update rating: {} ", updateRating.getId());
         return ratingJMapper.getDestination(ratingRepository.save(updateRating));
     }
 

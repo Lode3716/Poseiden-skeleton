@@ -53,7 +53,7 @@ public class TradeService implements ITradeService {
                 {
                     listTradeDto.add(tradeJMapper.getDestination(tradeList));
                 });
-        log.debug("Service : create list tradeDto : {} ", listTradeDto.size());
+        log.debug("Service : read list tradeDto : {} ", listTradeDto.size());
         return listTradeDto;
     }
 
@@ -70,7 +70,7 @@ public class TradeService implements ITradeService {
         updateTrade.setAccount(tradeDto.getAccount());
         updateTrade.setType(tradeDto.getType());
         updateTrade.setBuyQuantity(tradeDto.getBuyQuantity());
-        log.debug("Service : update trade : {} ", updateTrade.getTradeId());
+        log.info("Service : update trade : {} ", updateTrade.getTradeId());
         return tradeJMapper.getDestination(tradeRepository.save(updateTrade));
     }
 
