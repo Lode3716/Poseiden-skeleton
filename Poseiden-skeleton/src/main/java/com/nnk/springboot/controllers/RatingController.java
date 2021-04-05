@@ -53,9 +53,9 @@ public class RatingController {
     /**
      * Save a new ratingDto
      *
-     * @param ratingDto
-     * @param result
-     * @param model
+     * @param ratingDto new Rating new curvePoint to save
+     * @param result check entity validation
+     * @param model the entity
      * @returnThe URI to the rating/add if result has errors.
      * Else, redirects to /rating/list endpoint
      */
@@ -68,14 +68,15 @@ public class RatingController {
             model.addAttribute("rating", ratingService.readAll());
             return "redirect:/rating/list";
         }
+        log.error("POST : rating/add - ERROR");
         return "rating/add";
     }
 
     /**
      * Send to update form an existing ratingDto
      *
-     * @param id
-     * @param model
+     * @param id to update rating
+     * @param model the entity
      * @return the URI to the rating/update
      */
     @GetMapping("/rating/update/{id}")
@@ -90,12 +91,13 @@ public class RatingController {
      *
      * RatingDTO is update
      *
-     * @param id
-     * @param ratingDto
-     * @param result
-     * @param model
-     * @return The URI to the rating/add, if result has errors.
-     *        Else, redirects to /rating/list endpoint
+     * @param id to update rating
+     * @param RatingDto the entity update
+     * @param result check validation
+     * @param model the entity
+     * @return The URI to the rating/update, if result has errors.
+     * Else, redirects to /rating/list endpoint
+     *
      */
     @PostMapping("/rating/update/{id}")
     public String updateRating(@PathVariable("id") Integer id, @Valid RatingDto ratingDto,
@@ -115,11 +117,12 @@ public class RatingController {
 
 
     /**
-     * Find Rating by Id and delete the rating
+     * Find rating by Id and delete the rating
      *
-     * @param id
-     * @param model
-     * @return
+     * @param id to delete rating
+     * @param model list entity
+     * @return The URI to the rating/list
+     *
      */
     @GetMapping("/rating/delete/{id}")
     public String deleteRating(@PathVariable("id") Integer id, Model model) {

@@ -51,10 +51,11 @@ public class TradeController {
     /**
      * Save a new TradeDto
      *
-     * @param tradeDto
-     * @param result
-     * @param model
-     * @return
+     * @param tradeDto new trade to save
+     * @param result check entity validation
+     * @param model the entity
+     * @return The URI to the trade/add if result has errors.
+     * Else, redirects to /trade/list endpoint
      */
     @PostMapping("/trade/validate")
     public String validate(@Valid TradeDto tradeDto, BindingResult result, Model model) {
@@ -65,6 +66,7 @@ public class TradeController {
             model.addAttribute("trade", tradeService.readAll());
             return "redirect:/trade/list";
         }
+        log.error("POST : /trade/add - ERROR");
         return "trade/add";
     }
 
@@ -72,9 +74,9 @@ public class TradeController {
     /**
      * Send to update form an existing tradeDto
      *
-     * @param id
-     * @param model
-     * @return
+     * @param id to update trade
+     * @param model the entity
+     * @return the URI to the trade/update
      */
     @GetMapping("/trade/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
@@ -87,12 +89,13 @@ public class TradeController {
     /**
      * TradeDto is update
      *
-     * @param id
-     * @param tradeDto
-     * @param result
-     * @param model
+     * @param id to update trade
+     * @param TradeDto the entity update
+     * @param result check validation
+     * @param model the entity
      * @return The URI to the trade/update, if result has errors.
      * Else, redirects to /trade/list endpoint
+     *
      */
     @PostMapping("/trade/update/{id}")
     public String updateTrade(@PathVariable("id") Integer id, @Valid TradeDto tradeDto,
@@ -113,9 +116,10 @@ public class TradeController {
     /**
      * Find Trade by Id and delete the trade
      *
-     * @param id
-     * @param model
+     * @param id to delete trade
+     * @param model list entity
      * @return The URI to the trade/list
+     *
      */
     @GetMapping("/trade/delete/{id}")
     public String deleteTrade(@PathVariable("id") Integer id, Model model) {

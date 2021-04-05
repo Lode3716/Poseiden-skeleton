@@ -51,10 +51,11 @@ public class RuleNameController {
     /**
      * Send ruleNameDto to save.
      *
-     * @param ruleNameDto
-     * @param result
-     * @param model
-     * @return The URI to the ruleName/add
+     * @param ruleNameDto new ruleName to save
+     * @param result check entity validation
+     * @param model the entity
+     * @returnThe URI to the ruleName/add if result has errors.
+     * Else, redirects to ruleName/list endpoint
      */
     @PostMapping("/ruleName/validate")
     public String validate(@Valid RuleNameDto ruleNameDto, BindingResult result, Model model) {
@@ -65,14 +66,15 @@ public class RuleNameController {
             model.addAttribute("rule", ruleNameService.readAll());
             return "redirect:/ruleName/list";
         }
+        log.error("POST : rating/add - ERROR");
         return "ruleName/add";
     }
 
     /**
      * Send to update form an existing ruleNameDto
      *
-     * @param id
-     * @param model
+     * @param id to update ruleName
+     * @param model the entity
      * @return the URI to the ruleName/update
      */
     @GetMapping("/ruleName/update/{id}")
@@ -86,12 +88,13 @@ public class RuleNameController {
     /**
      * RuleNameDto is update
      *
-     * @param id
-     * @param ruleNameDto
-     * @param result
-     * @param model
+     * @param id to update ruleName
+     * @param RuleNameDto the entity update
+     * @param result check validation
+     * @param model the entity
      * @return The URI to the ruleName/update, if result has errors.
      * Else, redirects to /ruleName/list endpoint
+     *
      */
     @PostMapping("/ruleName/update/{id}")
     public String updateRuleName(@PathVariable("id") Integer id, @Valid RuleNameDto ruleNameDto,
@@ -110,11 +113,12 @@ public class RuleNameController {
     }
 
     /**
-     * Find RuleName by Id and delete the RuleName
+     * Find ruleName by Id and delete the ruleName
      *
-     * @param id
-     * @param model
+     * @param id to delete rating
+     * @param model list entity
      * @return The URI to the ruleName/list
+     *
      */
     @GetMapping("/ruleName/delete/{id}")
     public String deleteRuleName(@PathVariable("id") Integer id, Model model) {

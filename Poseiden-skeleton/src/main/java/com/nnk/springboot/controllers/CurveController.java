@@ -50,9 +50,9 @@ public class CurveController {
     /**
      * Save a new CurvePointDto
      *
-     * @param curvePointDto
-     * @param result
-     * @param model
+     * @param curvePointDto new curvePoint to save
+     * @param result check entity validation
+     * @param model the entity
      * @return The URI to the curvePoint/add if result has errors.
      * Else, redirects to /curvePoint/list endpoint
      */
@@ -65,14 +65,15 @@ public class CurveController {
             model.addAttribute("curves", curveService.readAll());
             return "redirect:/curvePoint/list";
         }
+        log.error("POST : curvePoint/add - ERROR");
         return "curvePoint/add";
     }
 
     /**
      * Send to update form an existing curvePointDto
      *
-     * @param id
-     * @param model
+     * @param id to update curvePoint
+     * @param model the entity
      * @return the URI to the curvePoint/update
      */
     @GetMapping("/curvePoint/update/{id}")
@@ -86,11 +87,13 @@ public class CurveController {
     /**
      * CurveListDto is update
      *
-     * @param id
-     * @param curvePointDto
-     * @param result
-     * @param model
-     * @return
+     * @param id to update curvePoint
+     * @param CurvePointDto the entity update
+     * @param result check validation
+     * @param model the entity
+     * @return The URI to the curvePoint/update, if result has errors.
+     * Else, redirects to /curvePoint/list endpoint
+     *
      */
     @PostMapping("/curvePoint/update/{id}")
     public String updateCurvePoint(@PathVariable("id") Integer id, @Valid CurvePointDto curvePointDto,
@@ -109,11 +112,12 @@ public class CurveController {
     }
 
     /**
-     * Find curve by Id and delete the curve
+     * Find curvePoint by Id and delete the curvePoint
      *
-     * @param id
-     * @param model
+     * @param id to delete curvePoint
+     * @param model list entity
      * @return The URI to the curvePoint/list
+     *
      */
     @GetMapping("/curvePoint/delete/{id}")
     public String deleteCurvePoint(@PathVariable("id") Integer id, Model model) {

@@ -10,6 +10,11 @@ import org.springframework.stereotype.Component;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ *
+ * Class to create and manage the Jwt
+ *
+ */
 @Log4j2
 @Component
 public class JwtUtils implements Serializable {

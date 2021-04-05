@@ -8,9 +8,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class ErrorController {
 
+    /**
+     * Page if access denied
+     *
+     * @return
+     */
     @GetMapping("/403")
     public String showError403() {
-        log.debug("GET Request on /403");
+        log.error("GET Request on /403");
         return "/403";
     }
 }

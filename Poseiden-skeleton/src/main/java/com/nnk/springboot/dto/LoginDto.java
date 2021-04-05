@@ -14,7 +14,7 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 public class LoginDto {
 
-    @NotBlank
+    @NotBlank(message = "Username is mandatory")
     private String username;
 
     @NotBlank

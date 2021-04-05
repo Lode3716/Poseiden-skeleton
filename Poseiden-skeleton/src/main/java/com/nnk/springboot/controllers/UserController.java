@@ -23,12 +23,26 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+
+    /**
+     * Send UserDto list.
+     *
+     * @param model
+     * @return The URI to the user/list
+     */
     @RequestMapping("/user/list")
     public String home(Model model) {
         model.addAttribute("users", userService.readAll());
         return "user/list";
     }
 
+
+    /**
+     * Send UserDto to save.
+     *
+     * @param model
+     * @return The URI to the user/add
+     */
     @GetMapping("/user/add")
     public String addUser(Model model) {
         log.info("GET : /user/add");
@@ -36,9 +50,22 @@ public class UserController {
         return "user/add";
     }
 
+
+    /**
+     *
+     * Save a new UserDto
+     *
+     * @param userDto new user to save
+     * @param result check validation
+     * @param model the entity
+     * @returnThe URI to the user/add if result has errors.
+     * Else, redirects to user/list endpoint
+     * if UserName exist, URI to the user/add with error UserExistException
+     *
+     */
     @PostMapping("/user/validate")
     public String validate(@Valid UserDto userDto, BindingResult result, Model model) {
-        log.debug("POST : /user/validate");
+        log.info("POST : /user/validate");
         if (!result.hasErrors()) {
             try {
                 userService.save(userDto);
@@ -46,6 +73,7 @@ public class UserController {
                 model.addAttribute("users", userService.readAll());
                 return "redirect:/user/list";
             } catch (UserExistException userExistException) {
+                log.error("POST : /user/add - ERROR : {}",userExistException.getMessage());
                 model.addAttribute("userExit", userExistException.getMessage());
                 return "user/add";
             }
@@ -53,6 +81,13 @@ public class UserController {
         return "user/add";
     }
 
+    /**
+     * Send to update form an existing user
+     *
+     * @param id to update user
+     * @param model the entity
+     * @return the URI to the user/update
+     */
     @GetMapping("/user/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         UserDto user = userService.readByid(id);
@@ -61,11 +96,23 @@ public class UserController {
         return "user/update";
     }
 
+
+    /**
+     * user is update
+     *
+     * @param id to update user
+     * @param UserDto the entity update
+     * @param result check validation
+     * @param model the entity
+     * @return The URI to the trade/update, if result has errors.
+     * Else, redirects to /trade/list endpoint
+     * if UserName exist, URI to the user/add with error UserExistException
+     *
+     */
     @PostMapping("/user/update/{id}")
     public String updateUser(@PathVariable("id") Integer id, @Valid UserDto userDto,
                              BindingResult result, Model model) {
         log.debug("POST : /user/update/{}", id);
-        log.info("User dto  : "+userDto);
         if (result.hasErrors()) {
             log.info("POST : /user/update/{} - ERROR", id);
             model.addAttribute("user", userDto);
@@ -76,16 +123,24 @@ public class UserController {
             model.addAttribute("users", userService.readAll());
             log.info("POST : /user/update/{} - SUCCESS", id);
             return "redirect:/user/list";
+
         } catch (UserExistException userExistException) {
             log.error("Update user exist {}",userExistException.getMessage());
             model.addAttribute("userExistUpdate", userExistException.getMessage());
-
         }
         model.addAttribute("user", userDto);
         return "user/update";
     }
 
 
+    /**
+     * Find User by Id and delete the user
+     *
+     * @param id to delete trade
+     * @param model list entity
+     * @return The URI to the user/list
+     *
+     */
     @GetMapping("/user/delete/{id}")
     public String deleteUser(@PathVariable("id") Integer id, Model model) {
         log.debug("DELETE : /user/delete/{}", id);

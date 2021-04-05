@@ -2,7 +2,6 @@ package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.config.jwt.JwtUtils;
 import com.nnk.springboot.dto.LoginDto;
-import com.nnk.springboot.services.UserDetailsServiceImpl;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,8 +9,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -35,9 +32,6 @@ public class LoginController {
     AuthenticationManager authenticationManager;
 
     @Autowired
-    PasswordEncoder encoder;
-
-    @Autowired
     JwtUtils jwtUtils;
 
     @Value("${poseidon.app.cookieExpirationSec}")
@@ -51,7 +45,7 @@ public class LoginController {
      */
     @GetMapping("/login")
     public String showLoginForm(final Model model, HttpServletRequest request) {
-        log.debug("GET Request on /login");
+        log.info("GET Request on /login");
         AtomicBoolean coockiPresent = new AtomicBoolean(false);
         model.addAttribute("loginDto", new LoginDto());
         Optional.ofNullable(request.getCookies())

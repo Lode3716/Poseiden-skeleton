@@ -52,9 +52,9 @@ public class BidListController {
     /**
      * Save a new BidListDto
      *
-     * @param bidListDto
-     * @param result
-     * @param model
+     * @param bidListDto new bidlist to save
+     * @param result check entity validation
+     * @param model the entity
      * @return The URI to the bidList/add if result has errors.
      * Else, redirects to /bidList/list endpoint
      */
@@ -74,8 +74,8 @@ public class BidListController {
     /**
      * Send to update form an existing BidListDto
      *
-     * @param id
-     * @param model
+     * @param id to update bidList
+     * @param model the entity
      * @return the URI to the bidList/update
      */
     @GetMapping("/bidList/update/{id}")
@@ -89,18 +89,19 @@ public class BidListController {
     /**
      * BidListDto is update
      *
-     * @param id
-     * @param bidListDto
-     * @param result
-     * @param model
+     * @param id to update bidList
+     * @param BidListDto the entity update
+     * @param result check validation
+     * @param model the entity
      * @return The URI to the bidList/update, if result has errors.
      * Else, redirects to /bidList/list endpoint
+     *
      */
     @PostMapping("/bidList/update/{id}")
     public String updateBid(@PathVariable("id") Integer id, @Valid BidListDto bidListDto,
                             BindingResult result, Model model) {
         log.debug("POST : /bidList/update/{}", id);
-        if (!result.hasErrors()) {
+        if (result.hasErrors()) {
             log.error("POST : /bidList/update/{} - ERROR", id);
             model.addAttribute("bidList", bidListDto);
             return "bidList/update";
@@ -114,9 +115,10 @@ public class BidListController {
     /**
      * Find BidList by Id and delete the BidList
      *
-     * @param id
-     * @param model
+     * @param id to delete bidList
+     * @param model list entity
      * @return The URI to the bidList/list
+     *
      */
     @GetMapping("/bidList/delete/{id}")
     public String deleteBid(@PathVariable("id") Integer id, Model model) {
